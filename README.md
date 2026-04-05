@@ -51,42 +51,49 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 
 ---
 
-## Software Installation
+## Software & SDK
+
+### 1. Standard USB3 Vision Software
+The camera works out-of-the-box with any U3V-compliant software:
+*   **Windows**: [Pleora eBus Player](https://www.jai.com/support-software/jai-software) (Recommended).
+*   **Linux**: [Aravis Project](https://github.com/AravisProject/aravis) or eBus SDK for Linux.
+
+### 2. U3V Camera SDK (C-based API)
+For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK.
+*   **Location**: [`WinUSB&QT/`](./WinUSB&QT/)
+*   **Features**: Discovery, Parameter Control (Exposure, Gain, ROI, Trigger), and High-speed Streaming.
+*   **Documentation**: See [`WinUSB&QT/README.md`](./WinUSB&QT/README.md) for API usage and examples.
+*   **Build Environment**: See [`WinUSB&QT/BUILD_ENVIRONMENT.md`](./WinUSB&QT/BUILD_ENVIRONMENT.md) for Windows, Linux, and macOS setup.
+
+---
+
+## Installation Guide
 
 ### Windows
-
-1.  **eBus Player**: Download and install the latest version from [JAI Support](https://www.jai.com/support-software/jai-software).
-2.  **Drivers**:
-    *   Use the **eBus Driver Installation Tool** included with the SDK.
-    *   Alternatively, for libusb-based applications, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. Detailed instructions can be found in [WinUSB&QT/WINUSB_DRIVER_INSTALL.md](./WinUSB&QT/WINUSB_DRIVER_INSTALL.md).
+1.  **Drivers**: For standard U3V software, use the eBus Driver Installation Tool. For the C-based SDK, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. (See [Driver Guide](./WinUSB&QT/WINUSB_DRIVER_INSTALL.md)).
+2.  **SDK**: Download the pre-compiled binaries from [`WinUSB&QT/Release.zip`](./WinUSB&QT/Release.zip).
 
 ### Linux (including Raspberry Pi 5)
-
-The camera is tested on Raspberry Pi 5 (Debian Bookworm/Trixie).
-
+The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
 1.  **Install eBus SDK**:
     ```bash
     cd "eBusPlayer&Aravis_PI5_Linux"
     sudo dpkg -i eBUS_SDK_JAI_Raspberry_Pi4_Pi5_linux-aarch64-arm-6.5.3-7155.deb
     ```
-2.  **Install Dependencies**:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install libqt5opengl5
+2.  **Dependencies**: `sudo apt install libqt5opengl5 libusb-1.0-0-dev`
+3.  **Udev Rules**: To access the camera without root, add the following to `/etc/udev/rules.d/99-u3v.rules`:
     ```
-3.  **Launch eBus Player**:
-    ```bash
-    cd /opt/jai/ebus_sdk/linux-aarch64-arm/bin
-    sudo ./eBUSPlayerJAI
+    SUBSYSTEM=="usb", ATTR{idVendor}=="04b4", ATTR{idProduct}=="1010", MODE="0666"
     ```
 
 ---
 
 ## Repository Structure
 
-*   `WinUSB&QT/`: Windows drivers (Zadig) and WinUSB installation guide.
-*   `eBusPlayer&Aravis_PI5_Linux/`: Linux SDK, dependencies, and trigger scripts for Raspberry Pi.
-*   `U3V-CAM-IMX296 User Manual V1.pdf`: Comprehensive technical documentation.
+*   [`WinUSB&QT/`](./WinUSB&QT/): C-based SDK, WinUSB drivers, and development guides.
+*   [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/): Linux SDK, udev rules, and Raspberry Pi trigger scripts.
+*   [`eBusPlayer_Win/`](./eBusPlayer_Win/): Windows eBus SDK information.
+*   [`U3V-CAM-IMX296 User Manual V1.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.pdf): Comprehensive technical documentation.
 
 ---
 
