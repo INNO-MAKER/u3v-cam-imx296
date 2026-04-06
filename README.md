@@ -60,18 +60,18 @@ The camera works out-of-the-box with any U3V-compliant software:
 
 ### 2. U3V Camera SDK (C-based API)
 For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK.
-*   **Location**: [`WinUSB&QT/`](./WinUSB&QT/)
+*   **Location**: [`LIBUSB&QT/`](./LIBUSB&QT/)
 *   **Features**: Discovery, Parameter Control (Exposure, Gain, ROI, Trigger), and High-speed Streaming.
-*   **Documentation**: See [`WinUSB&QT/README.md`](./WinUSB&QT/README.md) for API usage and examples.
-*   **Build Environment**: See [`WinUSB&QT/BUILD_ENVIRONMENT.md`](./WinUSB&QT/BUILD_ENVIRONMENT.md) for Windows, Linux, and macOS setup.
+*   **Documentation**: See [`LIBUSB&QT/README.md`](./LIBUSB&QT/README.md) for API usage and examples.
+*   **Build Environment**: See [`LIBUSB&QT/BUILD_ENVIRONMENT.md`](./LIBUSB&QT/BUILD_ENVIRONMENT.md) for Windows, Linux, and macOS setup.
 
 ---
 
 ## Installation Guide
 
 ### Windows
-1.  **Drivers**: For standard U3V software, use the eBus Driver Installation Tool. For the C-based SDK, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. (See [Driver Guide](./WinUSB&QT/WINUSB_DRIVER_INSTALL.md)).
-2.  **SDK**: Download the pre-compiled binaries from [`WinUSB&QT/Release.zip`](./WinUSB&QT/Release.zip).
+1.  **Drivers**: For standard U3V software, use the eBus Driver Installation Tool. For the C-based SDK, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. (See [Driver Guide](./LIBUSB&QT/WINUSB_DRIVER_INSTALL.md)).
+2.  **SDK**: Download the pre-compiled binaries from [`LIBUSB&QT/Release.zip`](./LIBUSB&QT/Release.zip).
 
 ### Linux (including Raspberry Pi 5)
 The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
@@ -90,7 +90,7 @@ The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
 
 ## Repository Structure
 
-*   [`WinUSB&QT/`](./WinUSB&QT/): C-based SDK, WinUSB drivers, and development guides.
+*   [`LIBUSB&QT/`](./LIBUSB&QT/): C-based SDK, WinUSB drivers, and development guides.
 *   [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/): Linux SDK, udev rules, and Raspberry Pi trigger scripts.
 *   [`eBusPlayer_Win/`](./eBusPlayer_Win/): Windows eBus SDK information.
 *   [`U3V-CAM-IMX296 User Manual V1.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.pdf): Comprehensive technical documentation.
