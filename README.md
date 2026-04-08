@@ -1,6 +1,6 @@
 # U3V-CAM-IMX296 USB3 Vision Industrial Camera
 
-![U3V-CAM-IMX296](https://www.inno-maker.com/wp-content/uploads/2021/06/IMX296-MIPI-4.jpg "IMX296")
+![U3V-CAM-IMX296](./images/amazon_main_4.png "U3V-CAM-IMX296")
 
 The **U3V-CAM-IMX296** is a high-performance USB3 Vision industrial camera featuring the **Sony IMX296LLR** (monochrome) global shutter CMOS sensor. With a resolution of **1.58 MP (1456 × 1088)** and a full-resolution frame rate of **60 fps**, it provides reliable, distortion-free imaging for demanding machine-vision applications such as motion analysis, automation, robotics, and scientific imaging.
 
@@ -56,9 +56,7 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 ## Software & SDK
 
 ### 1. Standard USB3 Vision Software (eBus Player)
-The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience:
-*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
-*   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
+The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience. See the [Resource Downloads](#resource-downloads) section at the bottom of this page for the latest download links.
 
 ### 2. U3V Camera SDK (C-based API)
 For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK.
@@ -73,15 +71,13 @@ For developers looking to integrate the camera into their own applications, we p
 
 ### Windows
 1.  **Drivers**: For standard U3V software, use the eBus Driver Installation Tool. For the C-based SDK, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. (See [Driver Guide](./LIBUSB&QT/WINUSB_DRIVER_INSTALL.md)).
-2.  **SDK**: Download the pre-compiled binaries from [`LIBUSB&QT/Release.zip`](./LIBUSB&QT/Release.zip).
+2.  **SDK**: Download the pre-compiled binaries from the [Resource Downloads](#resource-downloads) section.
 
 ### Linux (including Raspberry Pi 5)
 The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
 
 #### Option A: Use Preset Image (Recommended)
-For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed:
-*   **Download Link**: [Preset IMG (Flash and Boot) For PI5, Windows SDK](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
-*   **Password**: `uwpui3`
+For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed. See the [Resource Downloads](#resource-downloads) section for the download link.
 
 #### Option B: Manual Installation
 1.  **Install eBus SDK**:
@@ -90,10 +86,6 @@ For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with 
     sudo dpkg -i eBUS_SDK_JAI_Raspberry_Pi4_Pi5_linux-aarch64-arm-6.5.3-7155.deb
     ```
 2.  **Dependencies**: `sudo apt install libqt5opengl5 libusb-1.0-0-dev`
-3.  **Udev Rules**: To access the camera without root, add the following to `/etc/udev/rules.d/99-u3v.rules`:
-    ```
-    SUBSYSTEM=="usb", ATTR{idVendor}=="04b4", ATTR{idProduct}=="1010", MODE="0666"
-    ```
 
 ---
 
@@ -102,6 +94,7 @@ For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with 
 *   [`LIBUSB&QT/`](./LIBUSB&QT/): C-based SDK, WinUSB drivers, and development guides.
 *   [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/): Linux SDK, udev rules, and Raspberry Pi trigger scripts.
 *   [`eBusPlayer_Win/`](./eBusPlayer_Win/): Windows eBus SDK information.
+*   [`images/`](./images/): Product images.
 *   [`U3V-CAM-IMX296 User Manual V1.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.pdf): Comprehensive technical documentation.
 
 ---
@@ -112,3 +105,15 @@ For more information and technical support, please visit:
 *   **Website**: [www.inno-maker.com](https://www.inno-maker.com)
 *   **GitHub**: [github.com/inno-maker](https://github.com/inno-maker)
 *   **Email**: [support@inno-maker.com](mailto:support@inno-maker.com) | [sales@inno-maker.com](mailto:sales@inno-maker.com)
+
+---
+
+## Resource Downloads
+
+### eBus Player Latest Software
+*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
+*   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
+
+### Preset IMG (Flash and Boot) For PI5 & Windows SDK
+*   **Download Link**: [Preset IMG for PI5 & Windows SDK](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
+*   **Password**: `uwpui3`
