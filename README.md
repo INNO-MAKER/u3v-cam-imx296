@@ -1,5 +1,7 @@
 # U3V-CAM-IMX296 USB3 Vision Industrial Camera
 
+![U3V-CAM-IMX296](https://www.inno-maker.com/wp-content/uploads/2021/06/IMX296-MIPI-4.jpg "IMX296")
+
 The **U3V-CAM-IMX296** is a high-performance USB3 Vision industrial camera featuring the **Sony IMX296LLR** (monochrome) global shutter CMOS sensor. With a resolution of **1.58 MP (1456 × 1088)** and a full-resolution frame rate of **60 fps**, it provides reliable, distortion-free imaging for demanding machine-vision applications such as motion analysis, automation, robotics, and scientific imaging.
 
 The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** standards, offering plug-and-play compatibility across all major software platforms including OpenSource Aravis and Pleora eBus Universal.
@@ -53,10 +55,10 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 
 ## Software & SDK
 
-### 1. Standard USB3 Vision Software
-The camera works out-of-the-box with any U3V-compliant software:
-*   **Windows**: [Pleora eBus Player](https://www.jai.com/support-software/jai-software) (Recommended).
-*   **Linux**: [Aravis Project](https://github.com/AravisProject/aravis) or eBus SDK for Linux.
+### 1. Standard USB3 Vision Software (eBus Player)
+The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience:
+*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
+*   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
 
 ### 2. U3V Camera SDK (C-based API)
 For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK.
@@ -75,6 +77,13 @@ For developers looking to integrate the camera into their own applications, we p
 
 ### Linux (including Raspberry Pi 5)
 The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
+
+#### Option A: Use Preset Image (Recommended)
+For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed:
+*   **Download Link**: [Preset IMG (Flash and Boot) For PI5, Windows SDK](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
+*   **Password**: `uwpui3`
+
+#### Option B: Manual Installation
 1.  **Install eBus SDK**:
     ```bash
     cd "eBusPlayer&Aravis_PI5_Linux"
