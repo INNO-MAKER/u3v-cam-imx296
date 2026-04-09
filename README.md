@@ -110,10 +110,12 @@ For more information and technical support, please visit:
 
 ## Resource Downloads
 
-### eBus Player Latest Software
-*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
-*   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
-
-### Preset IMG (Flash and Boot) For PI5 & Windows SDK
+###  LIBUSB SDK & WIN Software & Preset IMG (Flash and Boot) For PI5 
 *   **Download Link**: [Preset IMG for PI5 & Windows SDK](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
 *   **Password**: `uwpui3`
+
+
+
+### eBus Player official Latest Software
+*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
+*   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
