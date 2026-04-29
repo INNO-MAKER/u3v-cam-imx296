@@ -56,66 +56,171 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 ## Software & SDK
 
 ### 1. Standard USB3 Vision Software (eBus Player)
-The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience. See the [Resource Downloads](#resource-downloads) section at the bottom of this page for the latest download links.
+
+The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience. See the [Resource Downloads](#resource-downloads) section for download links.
 
 ### 2. U3V Camera SDK (C-based API)
-For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK.
-*   **Location**: [`LIBUSB&QT/`](./LIBUSB&QT/)
-*   **Features**: Discovery, Parameter Control (Exposure, Gain, ROI, Trigger), and High-speed Streaming.
-*   **Documentation**: See [`LIBUSB&QT/README.md`](./LIBUSB&QT/README.md) for API usage and examples.
-*   **Build Environment**: See [`LIBUSB&QT/BUILD_ENVIRONMENT.md`](./LIBUSB&QT/BUILD_ENVIRONMENT.md) for Windows, Linux, and macOS setup.
+
+For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK with cross-platform support.
+
+**Location**: [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/)
+
+**Features**:
+- Device discovery and enumeration
+- Parameter control (Exposure, Gain, ROI, Trigger)
+- High-speed image streaming
+- Cross-platform: Windows (x64) and Linux (x64 / ARM64)
+
+**Documentation**: See [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md) for detailed API usage, build instructions, and platform-specific deployment guides.
 
 ---
 
 ## Installation Guide
 
 ### Windows
-1.  **Drivers**: For standard U3V software, use the eBus Driver Installation Tool. For the C-based SDK, use **Zadig** to install the **WinUSB** driver on the **Composite Parent** device. (See [Driver Guide](./LIBUSB&QT/WINUSB_DRIVER_INSTALL.md)).
-2.  **SDK**: Download the pre-compiled binaries from the [Resource Downloads](#resource-downloads) section.
+
+1. **Extract SDK**: Download `V9-SDK-DLL-CUS.zip` from the [Resource Downloads](#resource-downloads) section and extract to any directory (e.g., `D:\u3v\`).
+
+2. **Install WinUSB Driver**:
+   - Plug in the U3V camera
+   - Right-click `V9-SDK-DLL-CUS\tools\zadig-2.9.exe` and run as administrator
+   - Follow the on-screen prompts to install the WinUSB driver on the Composite Parent device
+   - See `V9-SDK-DLL-CUS\WINUSB_DRIVER_INSTALL.md` for detailed instructions
+
+3. **Launch GUI Viewer**:
+   - Double-click `V9-SDK-DLL-CUS\run_viewer.bat`
+   - The GUI viewer should launch and display your camera in the device list
 
 ### Linux (including Raspberry Pi 5)
-The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie).
 
-#### Option A: Use Preset Image (Recommended)
-For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed. See the [Resource Downloads](#resource-downloads) section for the download link.
+The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie) and Ubuntu 22.04+ systems.
 
-#### Option B: Manual Installation
-1.  **Install eBus SDK**:
-    ```bash
-    cd "eBusPlayer&Aravis_PI5_Linux"
-    sudo dpkg -i eBUS_SDK_JAI_Raspberry_Pi4_Pi5_linux-aarch64-arm-6.5.3-7155.deb
-    ```
-2.  **Dependencies**: `sudo apt install libqt5opengl5 libusb-1.0-0-dev`
+#### Option A: Use Preset Image (Recommended for Raspberry Pi 5)
+
+For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed.
+
+**Download**: See the [Resource Downloads](#resource-downloads) section for the preset image link.
+
+**Flash to microSD card**:
+```bash
+# On your host machine (Linux/macOS/Windows with Balena Etcher or similar)
+# 1. Download the preset image
+# 2. Flash to microSD card using Balena Etcher or dd command
+# 3. Insert microSD into Raspberry Pi 5 and boot
+```
+
+#### Option B: Manual Installation on Ubuntu / Debian
+
+1. **Install Runtime Dependencies**:
+   ```bash
+   sudo apt update
+   sudo apt install -y libusb-1.0-0 libqt6widgets6
+   ```
+
+2. **Extract and Deploy SDK**:
+   ```bash
+   tar xzf V9-SDK-SO-CUS.tar.gz
+   cd V9-SDK-SO-CUS
+   
+   # For ARM64 (Raspberry Pi 5, Jetson, etc.)
+   cd ubuntu22.04-arm64
+   
+   # For x86_64 (Intel/AMD)
+   # cd ubuntu22.04-x64
+   ```
+
+3. **Install udev Rule** (allow non-root USB access):
+   ```bash
+   sudo tee /etc/udev/rules.d/99-u3v.rules > /dev/null <<'EOF'
+   SUBSYSTEM=="usb", ATTRS{bDeviceClass}=="ef", ATTRS{bDeviceSubClass}=="02", ATTRS{bDeviceProtocol}=="01", MODE="0666", GROUP="plugdev"
+   EOF
+   
+   sudo udevadm control --reload-rules && sudo udevadm trigger
+   sudo usermod -aG plugdev $USER
+   # Log out and back in for the group change to take effect
+   ```
+
+4. **Launch GUI Viewer**:
+   ```bash
+   ./run_viewer.sh
+   ```
 
 ---
 
 ## Repository Structure
 
-*   [`LIBUSB&QT/`](./LIBUSB&QT/): C-based SDK, WinUSB drivers, and development guides.
-*   [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/): Linux SDK, udev rules, and Raspberry Pi trigger scripts.
-*   [`eBusPlayer_Win/`](./eBusPlayer_Win/): Windows eBus SDK information.
-*   [`images/`](./images/): Product images.
-*   [`U3V-CAM-IMX296 User Manual V1.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.pdf): Comprehensive technical documentation.
+| Directory | Purpose |
+| :--- | :--- |
+| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | C-based SDK with Windows (x64) and Linux (x64/ARM64) binaries, headers, examples, and build guides |
+| [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/) | eBus Player and Aravis software packages for Raspberry Pi 5 and Linux systems |
+| [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBus Player SDK information and download links |
+| [`PreInstalled-IMG-PI5/`](./PreInstalled-IMG-PI5/) | Download links for pre-configured Raspberry Pi 5 OS image with all software pre-installed |
+| [`images/`](./images/) | Product images and marketing materials |
+| [`U3V-CAM-IMX296 User Manual V10.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V10.pdf) | Comprehensive technical documentation covering hardware, software, and troubleshooting |
+
+---
+
+## Quick Start Examples
+
+### Windows: Run the GUI Viewer
+
+```batch
+cd V9-SDK-DLL-CUS
+run_viewer.bat
+```
+
+### Linux: Compile and Run a Custom Application
+
+```bash
+cd V9-SDK-SO-CUS/ubuntu22.04-arm64
+
+# Compile your application
+gcc my_app.c \
+    -I./include \
+    -L./lib -lu3v_cam \
+    -Wl,-rpath,'$ORIGIN/lib' \
+    -o my_app
+
+# Run it
+./my_app
+```
 
 ---
 
 ## Support
 
 For more information and technical support, please visit:
+
 *   **Website**: [www.inno-maker.com](https://www.inno-maker.com)
-*   **GitHub**: [github.com/inno-maker](https://github.com/inno-maker)
+*   **GitHub**: [github.com/INNO-MAKER](https://github.com/INNO-MAKER)
 *   **Email**: [support@inno-maker.com](mailto:support@inno-maker.com) | [sales@inno-maker.com](mailto:sales@inno-maker.com)
 
 ---
 
 ## Resource Downloads
 
-###  LIBUSB SDK & WIN Software & Preset IMG (Flash and Boot) For PI5 
-*   **Download Link**: [Preset IMG for PI5 & Windows SDK](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
-*   **Password**: `uwpui3`
+### SDK & Preset Image for Raspberry Pi 5
 
+**Download Link**: [U3V Camera SDK (Windows & Linux) + Preset Image for Raspberry Pi 5](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
 
+**Password**: `uwpui3`
 
-### eBus Player official Latest Software
-*   **For Windows**: [Download eBus Player for Win](https://www.jai.com/support-software/jetson-ubuntu)
+**Contents**:
+- `V9-SDK-DLL-CUS.zip` — Windows SDK (x64)
+- `V9-SDK-SO-CUS.tar.gz` — Linux SDK (x64 / ARM64)
+- Preset OS image for Raspberry Pi 5 (ready to flash)
+
+### eBus Player Official Latest Software
+
+*   **For Windows**: [Download eBus Player for Windows](https://www.jai.com/support-software/jetson-ubuntu)
 *   **For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
+
+---
+
+## Technical Documentation
+
+For detailed API reference, build environment setup, driver installation, and troubleshooting:
+
+- **SDK Overview & API**: See `InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`
+- **Hardware & Software Manual**: See `U3V-CAM-IMX296 User Manual V10.pdf`
+- **eBus Player Guides**: See `eBusPlayer&Aravis_PI5_Linux/ebus_for_raspberry_pi5/` for quick start guides and API documentation
