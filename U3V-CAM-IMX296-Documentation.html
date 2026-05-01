@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U3V-CAM-IMX296 USB3 Vision Industrial Camera - Complete Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        
+        .header-specs {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .spec-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .spec-item strong {
+            display: block;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        
+        .spec-item span {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #764ba2;
+        }
+        
+        main {
+            padding: 60px 40px;
+        }
+        
+        section {
+            margin-bottom: 60px;
+            scroll-margin-top: 100px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature-card strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: #f8f8f2;
+            padding: 0;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        
+        .highlight strong {
+            color: #856404;
+        }
+        
+        .sdk-comparison {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .comparison-box:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .comparison-box h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-box ul {
+            margin-left: 20px;
+        }
+        
+        .comparison-box li {
+            font-size: 0.95em;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .step-guide {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        
+        .step-guide li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .step-guide li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        footer {
+            background: #2d3436;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-top: 4px solid #667eea;
+        }
+        
+        footer p {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header-specs {
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            main {
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            pre {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>U3V-CAM-IMX296</h1>
+            <p>USB3 Vision Industrial Camera with Sony IMX296 Global Shutter Sensor</p>
+            <div class="header-specs">
+                <div class="spec-item">
+                    <strong>1.58 MP</strong>
+                    <span>1456 × 1088</span>
+                </div>
+                <div class="spec-item">
+                    <strong>60 fps</strong>
+                    <span>Full Resolution</span>
+                </div>
+                <div class="spec-item">
+                    <strong>Global Shutter</strong>
+                    <span>Zero Distortion</span>
+                </div>
+                <div class="spec-item">
+                    <strong>USB 3.0</strong>
+                    <span>Bus-Powered</span>
+                </div>
+            </div>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#sdk-options">SDK Options</a></li>
+                <li><a href="#innomake-sdk">InnoMaker SDK</a></li>
+                <li><a href="#api-reference">API Reference</a></li>
+                <li><a href="#support">Support</a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>Product Overview</h2>
+                <p>The <strong>U3V-CAM-IMX296</strong> is a high-performance USB3 Vision industrial camera featuring the <strong>Sony IMX296LLR</strong> (monochrome) global shutter CMOS sensor. With a resolution of <strong>1.58 MP (1456 × 1088)</strong> and a full-resolution frame rate of <strong>60 fps</strong>, it provides reliable, distortion-free imaging for demanding machine-vision applications.</p>
+                
+                <p>The camera is 100% compliant with <strong>USB3 Vision v1.0</strong> and <strong>GenICam 3.x</strong> standards, offering plug-and-play compatibility across all major software platforms.</p>
+                
+                <h3>Key Applications</h3>
+                <ul>
+                    <li><strong>Motion Analysis</strong> — Capture fast-moving objects without rolling distortion</li>
+                    <li><strong>Automation & Robotics</strong> — Precise, real-time visual feedback for control systems</li>
+                    <li><strong>Scientific Imaging</strong> — High-sensitivity, low-noise imaging for research</li>
+                    <li><strong>Quality Inspection</strong> — Defect detection with zero temporal distortion</li>
+                </ul>
+            </section>
+            
+            <!-- Features Section -->
+            <section id="features">
+                <h2>Key Features & Specifications</h2>
+                
+                <h3>Features</h3>
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <strong>Sony IMX296 Global Shutter</strong>
+                        <p>1/2.9" CMOS sensor with 3.45 µm pixels, ensuring zero rolling distortion.</p>
+                    </div>
+                    <div class="feature-card">
+                        <strong>High Frame Rate</strong>
+                        <p>Up to 60 fps at full resolution; exceeds 1900 fps with reduced ROI.</p>
+                    </div>
+                    <div class="feature-card">
+                        <strong>True Analog Gain</strong>
+                        <p>0–48 dB range with 0.1 dB steps for extremely low-noise imaging.</p>
+                    </div>
+                    <div class="feature-card">
+                        <strong>Long Exposure</strong>
+                        <p>Supports manual shutter with true long-exposure capability (≥ 15 seconds).</p>
+                    </div>
+                    <div class="feature-card">
+                        <strong>Precise Synchronization</strong>
+                        <p>Opto-isolated hardware trigger (5–24V) and strobe output with 0.1 µs timestamping.</p>
+                    </div>
+                    <div class="feature-card">
+                        <strong>Industrial Design</strong>
+                        <p>USB 3.0 bus-powered, compact form factor, and on-board temperature monitoring.</p>
+                    </div>
+                </div>
+                
+                <h3>Technical Specifications</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Specification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Sensor</strong></td>
+                            <td>Sony IMX296LLR (Monochrome, Global Shutter)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resolution</strong></td>
+                            <td>1456 (H) × 1088 (V), 1.58 MP</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pixel Size</strong></td>
+                            <td>3.45 µm × 3.45 µm</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Frame Rate</strong></td>
+                            <td>60 fps @ Full ROI (Mono8)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exposure Time</strong></td>
+                            <td>29 µs to ≥ 15 seconds</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analog Gain</strong></td>
+                            <td>0 – 48 dB (0.1 dB steps)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interface</strong></td>
+                            <td>USB 3.0 (Type-C or Micro-B)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>I/O Connector</strong></td>
+                            <td>6-pin Hirose (Trigger In, Strobe Out, GND)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Power</strong></td>
+                            <td>USB Bus-powered, 5V / ≤ 3.2W</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lens Mount</strong></td>
+                            <td>M12 (Default) / CS-Mount (Optional)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operating Temperature</strong></td>
+                            <td>-10 °C to +65 °C</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- SDK Options Section -->
+            <section id="sdk-options">
+                <h2>Software & SDK Options</h2>
+                
+                <div class="sdk-comparison">
+                    <h3>Three Ways to Use the Camera</h3>
+                    <p>Choose the solution that best fits your needs:</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-box">
+                            <h4>🚀 InnoMaker U3V SDK</h4>
+                            <p><strong>Recommended for custom development</strong></p>
+                            <ul>
+                                <li>Lightweight C API</li>
+                                <li>Cross-platform (Windows, Linux, ARM)</li>
+                                <li>Full camera control</li>
+                                <li>High-speed streaming</li>
+                                <li>GUI viewer included</li>
+                            </ul>
+                            <div style="margin-top: 15px;">
+                                <span class="badge badge-success">Recommended</span>
+                                <span class="badge badge-info">Custom Dev</span>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-box">
+                            <h4>🎨 eBus Player</h4>
+                            <p><strong>Full-featured GUI</strong></p>
+                            <ul>
+                                <li>Comprehensive GUI</li>
+                                <li>Data logging</li>
+                                <li>Multi-camera support</li>
+                                <li>Windows & Linux</li>
+                                <li>Commercial support</li>
+                            </ul>
+                            <div style="margin-top: 15px;">
+                                <span class="badge badge-info">GUI Tool</span>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-box">
+                            <h4>🔓 Aravis</h4>
+                            <p><strong>Open-source GenICam</strong></p>
+                            <ul>
+                                <li>Open-source (LGPL)</li>
+                                <li>Linux only</li>
+                                <li>GenICam compliant</li>
+                                <li>Lightweight</li>
+                                <li>Community support</li>
+                            </ul>
+                            <div style="margin-top: 15px;">
+                                <span class="badge badge-warning">Linux Only</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Quick Comparison Table</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>InnoMaker SDK</th>
+                            <th>eBus Player</th>
+                            <th>Aravis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>GUI Viewer</strong></td>
+                            <td><span class="badge badge-success">✓ Included</span></td>
+                            <td><span class="badge badge-success">✓ Full-featured</span></td>
+                            <td><span class="badge badge-success">✓ Lightweight</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Custom Development</strong></td>
+                            <td><span class="badge badge-success">✓ Recommended</span></td>
+                            <td><span class="badge badge-warning">⚠ Limited API</span></td>
+                            <td><span class="badge badge-success">✓ GenICam API</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Real-Time Performance</strong></td>
+                            <td><span class="badge badge-success">✓ Optimized</span></td>
+                            <td><span class="badge badge-warning">⚠ GUI Overhead</span></td>
+                            <td><span class="badge badge-warning">⚠ GUI Overhead</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cross-Platform</strong></td>
+                            <td><span class="badge badge-success">✓ Win + Linux</span></td>
+                            <td><span class="badge badge-success">✓ Win + Linux</span></td>
+                            <td><span class="badge badge-warning">⚠ Linux Only</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Learning Curve</strong></td>
+                            <td><span class="badge badge-success">✓ Simple C API</span></td>
+                            <td><span class="badge badge-warning">⚠ Steeper</span></td>
+                            <td><span class="badge badge-warning">⚠ Steeper</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>License</strong></td>
+                            <td>Proprietary</td>
+                            <td>Commercial</td>
+                            <td>Open-source (LGPL)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <!-- InnoMaker SDK Section -->
+            <section id="innomake-sdk">
+                <h2>InnoMaker U3V SDK — Installation & Usage</h2>
+                
+                <h3>Windows Installation</h3>
+                <ol class="step-guide">
+                    <li>
+                        <strong>Extract the SDK</strong>
+                        <p>Download <code>V9-SDK-DLL-CUS.zip</code> and extract to any directory (e.g., <code>D:\u3v\</code>).</p>
+                    </li>
+                    <li>
+                        <strong>Install WinUSB Driver</strong>
+                        <p>Plug in the U3V camera, then right-click <code>V9-SDK-DLL-CUS\tools\zadig-2.9.exe</code> and run as administrator. Follow the prompts to install the WinUSB driver.</p>
+                    </li>
+                    <li>
+                        <strong>Launch GUI Viewer</strong>
+                        <p>Double-click <code>V9-SDK-DLL-CUS\run_viewer.bat</code>. Your camera should appear in the device list.</p>
+                    </li>
+                    <li>
+                        <strong>Application Development (Optional)</strong>
+                        <p>Configure your Visual Studio project with:</p>
+                        <ul>
+                            <li>Include Directories: <code>V9-SDK-DLL-CUS\include</code></li>
+                            <li>Library Directories: <code>V9-SDK-DLL-CUS\lib</code></li>
+                            <li>Dependencies: <code>u3v_cam.lib</code></li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h3>Linux Installation (Ubuntu / Debian / Raspberry Pi)</h3>
+                <ol class="step-guide">
+                    <li>
+                        <strong>Extract the SDK</strong>
+                        <pre><code>tar xzf V9-SDK-SO-CUS.tar.gz
+cd V9-SDK-SO-CUS</code></pre>
+                    </li>
+                    <li>
+                        <strong>Install Runtime Dependencies</strong>
+                        <pre><code>sudo apt update
+sudo apt install -y libusb-1.0-0 libqt6widgets6</code></pre>
+                    </li>
+                    <li>
+                        <strong>Setup USB Permissions</strong>
+                        <pre><code>sudo tee /etc/udev/rules.d/99-u3v.rules > /dev/null <<'EOF'
+SUBSYSTEM=="usb", ATTRS{bDeviceClass}=="ef", ATTRS{bDeviceSubClass}=="02", ATTRS{bDeviceProtocol}=="01", MODE="0666", GROUP="plugdev"
+EOF
+
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo usermod -aG plugdev $USER
+# Log out and back in for the group change to take effect</code></pre>
+                    </li>
+                    <li>
+                        <strong>Launch GUI Viewer</strong>
+                        <pre><code># For x86_64 (Intel/AMD)
+cd ubuntu22.04-x64 && ./run_viewer.sh
+
+# For ARM64 (Raspberry Pi 5, Jetson, etc.)
+cd ubuntu22.04-arm64 && ./run_viewer.sh</code></pre>
+                    </li>
+                </ol>
+                
+                <h3>Application Development Example</h3>
+                <p>Here's a complete C example showing how to discover, open, and capture from the camera:</p>
+                <pre><code>#include &lt;u3v/u3v_sdk.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    /* 1. Initialize SDK */
+    if (u3v_sdk_init() != U3V_OK) {
+        printf("SDK initialization failed.\n");
+        return -1;
+    }
+
+    /* 2. Discover cameras */
+    u3v_device_info_t devices[8];
+    int count = u3v_discover(devices, 8);
+    if (count == 0) {
+        printf("No cameras found.\n");
+        u3v_sdk_shutdown();
+        return 0;
+    }
+    printf("Found camera: %s %s\n", devices[0].manufacturer, devices[0].model);
+
+    /* 3. Open camera */
+    u3v_camera_t *cam = NULL;
+    if (u3v_camera_open(&cam, 0) != U3V_OK) {
+        printf("Failed to open camera.\n");
+        u3v_sdk_shutdown();
+        return -1;
+    }
+
+    /* 4. Configure camera */
+    u3v_camera_set_exposure(cam, 10000);  /* 10ms */
+    u3v_camera_set_gain(cam, 0);          /* 0 dB */
+
+    /* 5. Create stream */
+    u3v_stream_t *stream = NULL;
+    u3v_stream_config_t cfg = {
+        .num_buffers = 4,
+        .timeout_ms = 1000,
+        .transfer_size = 0  /* Auto */
+    };
+    u3v_stream_create(&stream, cam, &cfg);
+
+    /* 6. Start acquisition */
+    u3v_camera_start(cam);
+
+    /* 7. Grab a frame */
+    uint32_t payload_size = 0;
+    u3v_camera_get_payload_size(cam, &payload_size);
+    u3v_buffer_t buf = {0};
+    u3v_buffer_alloc(&buf, payload_size);
+
+    u3v_status_t status = u3v_stream_grab(stream, &buf, 1000);
+    if (status == U3V_OK && buf.status == 0) {
+        printf("Captured frame: %d x %d\n", buf.width, buf.height);
+        u3v_buffer_save(&buf, "image.pgm");
+    }
+
+    /* 8. Cleanup */
+    u3v_buffer_free(&buf);
+    u3v_camera_stop(cam);
+    u3v_stream_destroy(stream);
+    u3v_camera_close(cam);
+    u3v_sdk_shutdown();
+
+    return 0;
+}</code></pre>
+                
+                <h3>Compile on Linux</h3>
+                <pre><code>ARCH_DIR=ubuntu22.04-x64       # or ubuntu22.04-arm64
+
+gcc my_app.c \
+    -I$ARCH_DIR/include \
+    -L$ARCH_DIR/lib -lu3v_cam \
+    -Wl,-rpath,'$ORIGIN/lib' \
+    -o my_app
+
+./my_app</code></pre>
+            </section>
+            
+            <!-- API Reference Section -->
+            <section id="api-reference">
+                <h2>API Reference</h2>
+                
+                <h3>Initialization & Discovery</h3>
+                <pre><code>/* Initialize the SDK */
+u3v_status_t u3v_sdk_init(void);
+void         u3v_sdk_shutdown(void);
+
+/* Discover connected cameras */
+int u3v_discover(u3v_device_info_t *info, int max_devices);</code></pre>
+                
+                <h3>Camera Control</h3>
+                <pre><code>/* Open and close camera */
+u3v_status_t u3v_camera_open(u3v_camera_t **cam, int device_index);
+void         u3v_camera_close(u3v_camera_t *cam);
+
+/* Start/stop acquisition */
+u3v_status_t u3v_camera_start(u3v_camera_t *cam);
+u3v_status_t u3v_camera_stop(u3v_camera_t *cam);
+
+/* Parameter control */
+u3v_status_t u3v_camera_set_exposure(u3v_camera_t *cam, uint32_t microseconds);
+u3v_status_t u3v_camera_set_gain(u3v_camera_t *cam, uint32_t gain);
+u3v_status_t u3v_camera_set_width(u3v_camera_t *cam, uint32_t width);
+u3v_status_t u3v_camera_set_height(u3v_camera_t *cam, uint32_t height);
+u3v_status_t u3v_camera_set_trigger_mode(u3v_camera_t *cam, uint32_t mode);
+u3v_status_t u3v_camera_send_software_trigger(u3v_camera_t *cam);</code></pre>
+                
+                <h3>Image Streaming</h3>
+                <pre><code>/* Create and destroy stream */
+u3v_status_t u3v_stream_create(u3v_stream_t **stream, u3v_camera_t *cam, const u3v_stream_config_t *config);
+void         u3v_stream_destroy(u3v_stream_t *stream);
+
+/* Grab frames */
+u3v_status_t u3v_stream_grab(u3v_stream_t *stream, u3v_frame_t *frame, uint32_t timeout_ms);
+
+/* Buffer management */
+u3v_status_t u3v_buffer_alloc(u3v_buffer_t *buf, uint32_t size);
+void         u3v_buffer_free(u3v_buffer_t *buf);
+u3v_status_t u3v_buffer_save(u3v_buffer_t *buf, const char *filename);</code></pre>
+                
+                <div class="highlight">
+                    <strong>📖 For the complete API reference:</strong>
+                    <p>See the headers in <code>include/u3v/</code> directory within the SDK package.</p>
+                </div>
+            </section>
+            
+            <!-- Support Section -->
+            <section id="support">
+                <h2>Support & Resources</h2>
+                
+                <h3>Contact Information</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Website</strong></td>
+                            <td><a href="https://www.inno-maker.com" target="_blank">www.inno-maker.com</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>GitHub</strong></td>
+                            <td><a href="https://github.com/INNO-MAKER" target="_blank">github.com/INNO-MAKER</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Technical Support</strong></td>
+                            <td><a href="mailto:support@inno-maker.com">support@inno-maker.com</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sales</strong></td>
+                            <td><a href="mailto:sales@inno-maker.com">sales@inno-maker.com</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Resource Downloads</h3>
+                <h4>InnoMaker U3V SDK & Preset Image for Raspberry Pi 5</h4>
+                <p><strong>Download Link:</strong> <a href="https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA" target="_blank">U3V Camera SDK (Windows & Linux) + Preset Image</a></p>
+                <p><strong>Password:</strong> <code>uwpui3</code></p>
+                <p><strong>Contents:</strong></p>
+                <ul>
+                    <li><code>V9-SDK-DLL-CUS.zip</code> — Windows SDK (x64) with GUI viewer and CLI demo</li>
+                    <li><code>V9-SDK-SO-CUS.tar.gz</code> — Linux SDK (x64 / ARM64) with GUI viewer and CLI demo</li>
+                    <li>Preset OS image for Raspberry Pi 5 (ready to flash)</li>
+                </ul>
+                
+                <h4>eBus Player Official Software</h4>
+                <ul>
+                    <li><strong>Windows:</strong> <a href="https://www.jai.com/support-software/jetson-ubuntu" target="_blank">Download eBus Player for Windows</a></li>
+                    <li><strong>Linux:</strong> <a href="https://www.jai.com/support-software/jetson-ubuntu" target="_blank">Download eBus Player for Linux</a></li>
+                </ul>
+                
+                <h3>Technical Documentation</h3>
+                <ul>
+                    <li><strong>SDK Overview & API:</strong> See <code>InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md</code></li>
+                    <li><strong>Windows SDK Guide:</strong> See <code>InnoMaker_SDK_Libusb_Win_Linux/V9-SDK-DLL-CUS/README.md</code></li>
+                    <li><strong>Linux SDK Guide:</strong> See <code>InnoMaker_SDK_Libusb_Win_Linux/V9-SDK-SO-CUS/README_LINUX.md</code></li>
+                    <li><strong>Hardware & Software Manual:</strong> See <code>U3V-CAM-IMX296 User Manual V10.pdf</code></li>
+                </ul>
+            </section>
+        </main>
+        
+        <footer>
+            <p><strong>U3V-CAM-IMX296 Documentation</strong></p>
+            <p>© 2026 InnoMaker. All rights reserved.</p>
+            <p><a href="https://www.inno-maker.com" target="_blank">www.inno-maker.com</a> | <a href="mailto:support@inno-maker.com">support@inno-maker.com</a></p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">Last Updated: May 2026 | SDK Version: 2.0.0</p>
+        </footer>
+    </div>
+</body>
+</html>
