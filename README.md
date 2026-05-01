@@ -4,7 +4,7 @@
 
 The **U3V-CAM-IMX296** is a high-performance USB3 Vision industrial camera featuring the **Sony IMX296LLR** (monochrome) global shutter CMOS sensor. With a resolution of **1.58 MP (1456 × 1088)** and a full-resolution frame rate of **60 fps**, it provides reliable, distortion-free imaging for demanding machine-vision applications such as motion analysis, automation, robotics, and scientific imaging.
 
-The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** standards, offering plug-and-play compatibility across all major software platforms including OpenSource Aravis and Pleora eBus Universal.
+The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** standards, offering plug-and-play compatibility across all major software platforms.
 
 ---
 
@@ -38,6 +38,57 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 
 ---
 
+## Software & SDK Options
+
+### 1. **InnoMaker U3V SDK** (Recommended for Custom Development)
+
+Our proprietary **U3V SDK** provides a lightweight, cross-platform C-based API with full camera control and high-speed image streaming. This is the recommended choice for developers who need direct, low-level camera access and maximum performance.
+
+**Key Advantages**:
+- **Lightweight & Fast**: Minimal overhead, optimized for real-time applications
+- **Cross-Platform**: Identical API on Windows, Linux (x64/ARM64), Raspberry Pi, and Jetson
+- **Full Control**: Direct access to all camera parameters (exposure, gain, ROI, trigger, strobe)
+- **Easy Integration**: Simple C API with comprehensive examples
+- **Binary Distribution**: Pre-built, ready-to-use packages for Windows and Linux
+
+**Supported Platforms**:
+| Platform | Architecture | Status |
+|---|---|---|
+| Windows | x64 (Visual Studio 2019+) | ✅ Fully Supported |
+| Ubuntu / Debian | x64 | ✅ Fully Supported |
+| Raspberry Pi 5 | ARM64 (Bookworm/Trixie) | ✅ Fully Supported |
+| NVIDIA Jetson Orin Nano | ARM64 (JetPack 6.0+) | ✅ Fully Supported |
+
+**SDK Contents**:
+- Pre-built libraries (DLL on Windows, .so on Linux)
+- Qt6-based GUI viewer for quick testing
+- CLI demo application with source code
+- Complete C API headers (9 header files)
+- Cross-platform build examples
+
+**Getting Started**: See [InnoMaker SDK Installation & Usage](#innomaker-sdk-installation--usage) below.
+
+---
+
+### 2. **Standard USB3 Vision Software (eBus Player & Aravis)**
+
+For users who prefer industry-standard, GenICam-compliant tools, we provide integration with:
+
+- **eBus Player** (Pleora): Full-featured GUI with advanced camera control, data logging, and multi-camera support
+- **Aravis** (GNOME Project): Open-source GenICam implementation for Linux
+
+Both tools work out-of-the-box with the U3V-CAM-IMX296 without any custom drivers or patches.
+
+**When to Use**:
+- You prefer a GUI over programmatic control
+- You need multi-camera management
+- You want vendor-neutral, open-source solutions
+- You're integrating with existing GenICam workflows
+
+**Resources**: See [Standard USB3 Vision Software](#standard-usb3-vision-software-ebus-player--aravis) section below.
+
+---
+
 ## Hardware Interface
 
 ### 6-pin Hirose Connector Pinout (HR10A-7R-6P)
@@ -53,97 +104,253 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 
 ---
 
-## Software & SDK
+## InnoMaker SDK Installation & Usage
 
-### 1. Standard USB3 Vision Software (eBus Player)
+### Windows Installation
 
-The camera works out-of-the-box with any U3V-compliant software. We recommend the latest **eBus Player** for the best experience. See the [Resource Downloads](#resource-downloads) section for download links.
+#### Step 1: Extract the SDK
 
-### 2. U3V Camera SDK (C-based API)
+Download `V9-SDK-DLL-CUS.zip` from the [Resource Downloads](#resource-downloads) section and extract to any directory (e.g., `D:\u3v\`).
 
-For developers looking to integrate the camera into their own applications, we provide a lightweight C-based SDK with cross-platform support.
+#### Step 2: Install WinUSB Driver
 
-**Location**: [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/)
+1. Plug in the U3V camera
+2. Navigate to the extracted folder: `D:\u3v\V9-SDK-DLL-CUS\tools\`
+3. Right-click `zadig-2.9.exe` and select **Run as administrator**
+4. Follow the on-screen prompts to install the **WinUSB driver**
+5. For detailed driver instructions, see `V9-SDK-DLL-CUS\WINUSB_DRIVER_INSTALL.md`
 
-**Features**:
-- Device discovery and enumeration
-- Parameter control (Exposure, Gain, ROI, Trigger)
-- High-speed image streaming
-- Cross-platform: Windows (x64) and Linux (x64 / ARM64)
+#### Step 3: Launch the GUI Viewer
 
-**Documentation**: See [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md) for detailed API usage, build instructions, and platform-specific deployment guides.
+Double-click `D:\u3v\V9-SDK-DLL-CUS\run_viewer.bat` to launch the GUI viewer. Your camera should appear in the device list.
+
+#### Step 4: Application Development (Optional)
+
+To integrate the SDK into your own Visual Studio project:
+
+```cpp
+// Header
+#include <u3v/u3v_sdk.h>
+
+// Visual Studio project settings:
+//   Additional Include Directories:  V9-SDK-DLL-CUS\include
+//   Additional Library Directories:  V9-SDK-DLL-CUS\lib
+//   Additional Dependencies:         u3v_cam.lib
+
+// At runtime, ensure V9-SDK-DLL-CUS\bin is on PATH, or copy the
+// contents of bin\ to your executable's directory.
+```
 
 ---
 
-## Installation Guide
+### Linux Installation (Ubuntu / Debian / Raspberry Pi)
 
-### Windows
+#### Step 1: Extract the SDK
 
-1. **Extract SDK**: Download `V9-SDK-DLL-CUS.zip` from the [Resource Downloads](#resource-downloads) section and extract to any directory (e.g., `D:\u3v\`).
-
-2. **Install WinUSB Driver**:
-   - Plug in the U3V camera
-   - Right-click `V9-SDK-DLL-CUS\tools\zadig-2.9.exe` and run as administrator
-   - Follow the on-screen prompts to install the WinUSB driver on the Composite Parent device
-   - See `V9-SDK-DLL-CUS\WINUSB_DRIVER_INSTALL.md` for detailed instructions
-
-3. **Launch GUI Viewer**:
-   - Double-click `V9-SDK-DLL-CUS\run_viewer.bat`
-   - The GUI viewer should launch and display your camera in the device list
-
-### Linux (including Raspberry Pi 5)
-
-The camera is fully validated on Raspberry Pi 5 (Debian Bookworm/Trixie) and Ubuntu 22.04+ systems.
-
-#### Option A: Use Preset Image (Recommended for Raspberry Pi 5)
-
-For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with all drivers and software pre-installed.
-
-**Download**: See the [Resource Downloads](#resource-downloads) section for the preset image link.
-
-**Flash to microSD card**:
 ```bash
-# On your host machine (Linux/macOS/Windows with Balena Etcher or similar)
-# 1. Download the preset image
-# 2. Flash to microSD card using Balena Etcher or dd command
-# 3. Insert microSD into Raspberry Pi 5 and boot
+tar xzf V9-SDK-SO-CUS.tar.gz
+cd V9-SDK-SO-CUS
 ```
 
-#### Option B: Manual Installation on Ubuntu / Debian
+#### Step 2: Install Runtime Dependencies
 
-1. **Install Runtime Dependencies**:
-   ```bash
-   sudo apt update
-   sudo apt install -y libusb-1.0-0 libqt6widgets6
-   ```
+```bash
+sudo apt update
+sudo apt install -y libusb-1.0-0 libqt6widgets6
+```
 
-2. **Extract and Deploy SDK**:
-   ```bash
-   tar xzf V9-SDK-SO-CUS.tar.gz
-   cd V9-SDK-SO-CUS
-   
-   # For ARM64 (Raspberry Pi 5, Jetson, etc.)
-   cd ubuntu22.04-arm64
-   
-   # For x86_64 (Intel/AMD)
-   # cd ubuntu22.04-x64
-   ```
+#### Step 3: Setup USB Permissions (One-Time)
 
-3. **Install udev Rule** (allow non-root USB access):
-   ```bash
-   sudo tee /etc/udev/rules.d/99-u3v.rules > /dev/null <<'EOF'
-   SUBSYSTEM=="usb", ATTRS{bDeviceClass}=="ef", ATTRS{bDeviceSubClass}=="02", ATTRS{bDeviceProtocol}=="01", MODE="0666", GROUP="plugdev"
-   EOF
-   
-   sudo udevadm control --reload-rules && sudo udevadm trigger
-   sudo usermod -aG plugdev $USER
-   # Log out and back in for the group change to take effect
-   ```
+Install the udev rule to allow non-root USB camera access:
 
-4. **Launch GUI Viewer**:
-   ```bash
-   ./run_viewer.sh
-   ```
+```bash
+sudo tee /etc/udev/rules.d/99-u3v.rules > /dev/null <<'EOF'
+SUBSYSTEM=="usb", ATTRS{bDeviceClass}=="ef", ATTRS{bDeviceSubClass}=="02", ATTRS{bDeviceProtocol}=="01", MODE="0666", GROUP="plugdev"
+EOF
+
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo usermod -aG plugdev $USER
+# Log out and back in for the group change to take effect
+```
+
+#### Step 4: Launch the GUI Viewer
+
+Determine your system architecture and launch the viewer:
+
+```bash
+# For x86_64 (Intel/AMD)
+cd ubuntu22.04-x64 && ./run_viewer.sh
+
+# For ARM64 (Raspberry Pi 5, Jetson Orin Nano, etc.)
+cd ubuntu22.04-arm64 && ./run_viewer.sh
+```
+
+#### Step 5: Application Development (Optional)
+
+Compile your own application against the SDK:
+
+```bash
+ARCH_DIR=ubuntu22.04-x64       # or ubuntu22.04-arm64
+
+gcc my_app.c \
+    -I$ARCH_DIR/include \
+    -L$ARCH_DIR/lib -lu3v_cam \
+    -Wl,-rpath,'$ORIGIN/lib' \
+    -o my_app
+
+./my_app
+```
+
+The `-Wl,-rpath,'$ORIGIN/lib'` flag embeds the library search path, so you can distribute `my_app` together with the `lib/` folder without installing system-wide.
+
+---
+
+## InnoMaker SDK API Overview
+
+The SDK provides a simple C API for camera control and image acquisition.
+
+### Initialization & Discovery
+
+```c
+/* Initialize the SDK */
+u3v_status_t u3v_sdk_init(void);
+void         u3v_sdk_shutdown(void);
+
+/* Discover connected cameras */
+int u3v_discover(u3v_device_info_t *info, int max_devices);
+```
+
+### Camera Control
+
+```c
+/* Open and close camera */
+u3v_status_t u3v_camera_open(u3v_camera_t **cam, int device_index);
+void         u3v_camera_close(u3v_camera_t *cam);
+
+/* Start/stop acquisition */
+u3v_status_t u3v_camera_start(u3v_camera_t *cam);
+u3v_status_t u3v_camera_stop(u3v_camera_t *cam);
+
+/* Parameter control (examples) */
+u3v_status_t u3v_camera_set_exposure(u3v_camera_t *cam, uint32_t microseconds);
+u3v_status_t u3v_camera_set_gain(u3v_camera_t *cam, uint32_t gain);
+u3v_status_t u3v_camera_set_width(u3v_camera_t *cam, uint32_t width);
+u3v_status_t u3v_camera_set_height(u3v_camera_t *cam, uint32_t height);
+u3v_status_t u3v_camera_set_trigger_mode(u3v_camera_t *cam, uint32_t mode);
+u3v_status_t u3v_camera_send_software_trigger(u3v_camera_t *cam);
+```
+
+### Image Streaming
+
+```c
+/* Create and destroy stream */
+u3v_status_t u3v_stream_create(u3v_stream_t **stream, u3v_camera_t *cam, const u3v_stream_config_t *config);
+void         u3v_stream_destroy(u3v_stream_t *stream);
+
+/* Grab frames */
+u3v_status_t u3v_stream_grab(u3v_stream_t *stream, u3v_frame_t *frame, uint32_t timeout_ms);
+
+/* Buffer management */
+u3v_status_t u3v_buffer_alloc(u3v_buffer_t *buf, uint32_t size);
+void         u3v_buffer_free(u3v_buffer_t *buf);
+u3v_status_t u3v_buffer_save(u3v_buffer_t *buf, const char *filename);
+```
+
+For the complete API reference, see the headers in `include/u3v/`.
+
+---
+
+## Basic Usage Example (C)
+
+```c
+#include <u3v/u3v_sdk.h>
+#include <stdio.h>
+
+int main(void) {
+    /* 1. Initialize SDK */
+    if (u3v_sdk_init() != U3V_OK) {
+        printf("SDK initialization failed.\n");
+        return -1;
+    }
+
+    /* 2. Discover cameras */
+    u3v_device_info_t devices[8];
+    int count = u3v_discover(devices, 8);
+    if (count == 0) {
+        printf("No cameras found.\n");
+        u3v_sdk_shutdown();
+        return 0;
+    }
+    printf("Found camera: %s %s\n", devices[0].manufacturer, devices[0].model);
+
+    /* 3. Open camera */
+    u3v_camera_t *cam = NULL;
+    if (u3v_camera_open(&cam, 0) != U3V_OK) {
+        printf("Failed to open camera.\n");
+        u3v_sdk_shutdown();
+        return -1;
+    }
+
+    /* 4. Configure camera */
+    u3v_camera_set_exposure(cam, 10000);  /* 10ms */
+    u3v_camera_set_gain(cam, 0);          /* 0 dB */
+
+    /* 5. Create stream */
+    u3v_stream_t *stream = NULL;
+    u3v_stream_config_t cfg = {
+        .num_buffers = 4,
+        .timeout_ms = 1000,
+        .transfer_size = 0  /* Auto */
+    };
+    u3v_stream_create(&stream, cam, &cfg);
+
+    /* 6. Start acquisition */
+    u3v_camera_start(cam);
+
+    /* 7. Grab a frame */
+    uint32_t payload_size = 0;
+    u3v_camera_get_payload_size(cam, &payload_size);
+    u3v_buffer_t buf = {0};
+    u3v_buffer_alloc(&buf, payload_size);
+
+    u3v_status_t status = u3v_stream_grab(stream, &buf, 1000);
+    if (status == U3V_OK && buf.status == 0) {
+        printf("Captured frame: %d x %d\n", buf.width, buf.height);
+        u3v_buffer_save(&buf, "image.pgm");
+    }
+
+    /* 8. Cleanup */
+    u3v_buffer_free(&buf);
+    u3v_camera_stop(cam);
+    u3v_stream_destroy(stream);
+    u3v_camera_close(cam);
+    u3v_sdk_shutdown();
+
+    return 0;
+}
+```
+
+---
+
+## Standard USB3 Vision Software (eBus Player & Aravis)
+
+The camera works out-of-the-box with any U3V-compliant software. We provide integration packages for:
+
+### eBus Player (Pleora)
+
+A comprehensive GUI for camera control, data logging, and multi-camera management.
+
+**For Windows**: [Download eBus Player for Windows](https://www.jai.com/support-software/jetson-ubuntu)
+
+**For Linux**: [Download eBus Player for Linux](https://www.jai.com/support-software/jetson-ubuntu)
+
+See [`eBusPlayer_Win/`](./eBusPlayer_Win/) and [`eBusPlayer&Aravis_PI5_Linux/ebus_for_raspberry_pi5/`](./eBusPlayer&Aravis_PI5_Linux/ebus_for_raspberry_pi5/) for quick start guides.
+
+### Aravis (Open-Source GenICam)
+
+An open-source GenICam implementation for Linux. Ideal for integration into custom applications or as a lightweight alternative to eBus Player.
+
+**Package Location**: [`eBusPlayer&Aravis_PI5_Linux/aravis_for_raspberry_pi5/`](./eBusPlayer&Aravis_PI5_Linux/aravis_for_raspberry_pi5/)
 
 ---
 
@@ -151,7 +358,8 @@ For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with 
 
 | Directory | Purpose |
 | :--- | :--- |
-| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | C-based SDK with Windows (x64) and Linux (x64/ARM64) binaries, headers, examples, and build guides |
+| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | **InnoMaker U3V SDK** — Pre-built binaries, headers, examples, and build guides for Windows (x64) and Linux (x64/ARM64) |
+| [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md) | Detailed SDK delivery notes, package contents, and cross-platform reference |
 | [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer&Aravis_PI5_Linux/) | eBus Player and Aravis software packages for Raspberry Pi 5 and Linux systems |
 | [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBus Player SDK information and download links |
 | [`PreInstalled-IMG-PI5/`](./PreInstalled-IMG-PI5/) | Download links for pre-configured Raspberry Pi 5 OS image with all software pre-installed |
@@ -160,30 +368,16 @@ For a quick setup, we provide a pre-configured OS image for Raspberry Pi 5 with 
 
 ---
 
-## Quick Start Examples
+## Quick Start Comparison
 
-### Windows: Run the GUI Viewer
-
-```batch
-cd V9-SDK-DLL-CUS
-run_viewer.bat
-```
-
-### Linux: Compile and Run a Custom Application
-
-```bash
-cd V9-SDK-SO-CUS/ubuntu22.04-arm64
-
-# Compile your application
-gcc my_app.c \
-    -I./include \
-    -L./lib -lu3v_cam \
-    -Wl,-rpath,'$ORIGIN/lib' \
-    -o my_app
-
-# Run it
-./my_app
-```
+| Task | InnoMaker SDK | eBus Player | Aravis |
+|---|---|---|---|
+| **GUI Viewer** | ✅ Included | ✅ Full-featured | ✅ Lightweight |
+| **Custom Development** | ✅ Recommended | ⚠️ Limited API | ✅ GenICam API |
+| **Real-Time Performance** | ✅ Optimized | ⚠️ GUI overhead | ⚠️ GUI overhead |
+| **Cross-Platform** | ✅ Windows + Linux | ✅ Windows + Linux | ✅ Linux only |
+| **Learning Curve** | ✅ Simple C API | ⚠️ Steeper | ⚠️ Steeper |
+| **License** | Proprietary | Commercial | Open-source (LGPL) |
 
 ---
 
@@ -199,15 +393,15 @@ For more information and technical support, please visit:
 
 ## Resource Downloads
 
-### SDK & Preset Image for Raspberry Pi 5
+### InnoMaker U3V SDK & Preset Image for Raspberry Pi 5
 
 **Download Link**: [U3V Camera SDK (Windows & Linux) + Preset Image for Raspberry Pi 5](https://www.jianguoyun.com/p/DXuEVqMQpdSrBxiqmp0GIAA)
 
 **Password**: `uwpui3`
 
 **Contents**:
-- `V9-SDK-DLL-CUS.zip` — Windows SDK (x64)
-- `V9-SDK-SO-CUS.tar.gz` — Linux SDK (x64 / ARM64)
+- `V9-SDK-DLL-CUS.zip` — Windows SDK (x64) with GUI viewer and CLI demo
+- `V9-SDK-SO-CUS.tar.gz` — Linux SDK (x64 / ARM64) with GUI viewer and CLI demo
 - Preset OS image for Raspberry Pi 5 (ready to flash)
 
 ### eBus Player Official Latest Software
@@ -222,5 +416,7 @@ For more information and technical support, please visit:
 For detailed API reference, build environment setup, driver installation, and troubleshooting:
 
 - **SDK Overview & API**: See `InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`
+- **Windows SDK Guide**: See `InnoMaker_SDK_Libusb_Win_Linux/V9-SDK-DLL-CUS/README.md`
+- **Linux SDK Guide**: See `InnoMaker_SDK_Libusb_Win_Linux/V9-SDK-SO-CUS/README_LINUX.md`
 - **Hardware & Software Manual**: See `U3V-CAM-IMX296 User Manual V10.pdf`
 - **eBus Player Guides**: See `eBusPlayer&Aravis_PI5_Linux/ebus_for_raspberry_pi5/` for quick start guides and API documentation
