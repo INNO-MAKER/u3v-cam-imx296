@@ -279,4 +279,4 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 *   **Website**: [www.inno-maker.com](https://www.inno-maker.com)
 *   **GitHub**: [github.com/INNO-MAKER](https://github.com/INNO-MAKER)
-*   **Email**: [support@inno-maker.com](mailto:support@inno-maker.com) | [sales@inno-maker.com](mailto:sales@inno-maker.com)
+*   **Email**: [support@inno-maker.com](mailto:support@inno-maker.com) | [sales@inno-maker.com](mailto:sales@inno-maker.com) | [zoujy@inno-maker.com](mailto:zoujy@inno-maker.com)
