@@ -57,9 +57,9 @@ For detailed hardware dimensions, connector parameters, and wiring diagrams, ref
 
 ## 2. InnoMaker SDK
 
-The **InnoMaker U3V SDK** (version 2.1.0) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library.
+The **InnoMaker U3V SDK** (version 2.1.1) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library.
 
-**SDK version**: 2.1.0 — **Last updated**: 2026-05-11
+**SDK version**: 2.1.1 — **Last updated**: 2026-06-01
 
 For full delivery notes and package contents, see [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md).
 
@@ -70,8 +70,9 @@ For full delivery notes and package contents, see [`InnoMaker_SDK_Libusb_Win_Lin
 | `V9-SDK-DLL-CUS.zip` | Windows x64 | 26 MB (zip) / 56 MB | C/C++ SDK with GUI viewer, CLI demo, headers, and bundled runtime |
 | `V9-SDK-SO-CUS.tar.gz` | Linux x64 / ARM64 | 520 KB (tar.gz) / 1.4 MB | C/C++ SDK with GUI viewer, CLI demo, and headers |
 | `V9-SDK-PYTHON-CUS.zip` | Windows + Linux x64 / ARM64 | 540 KB (zip) / 1.2 MB | Python SDK — bundles native libraries for all platforms |
+| `V9-SDK-DYLIB-CUS.zip` | macOS arm64 + x86_64 | 42 MB | macOS C/C++ SDK with GUI viewer — one per-arch zip inside (Apple Silicon + Intel) |
 
-All three packages share the same SDK source tree and the same underlying shared library. The Python package wraps the identical C library via ctypes — no separate codepath.
+All four packages share the same SDK source tree and the same underlying shared library. The Python package wraps the identical C library via ctypes — no separate codepath.
 
 ### Supported Platforms
 
@@ -81,6 +82,8 @@ All three packages share the same SDK source tree and the same underlying shared
 | Ubuntu 22.04+ / Debian 12+ | x64 | ✅ Fully Supported |
 | Raspberry Pi 5 (Bookworm / Trixie) | ARM64 | ✅ Fully Supported |
 | NVIDIA Jetson Orin Nano (JetPack 6.0+) | ARM64 | ✅ Fully Supported |
+| macOS 11+ (Apple Silicon M1/M2/M3/M4) | arm64 | ✅ Fully Supported |
+| macOS 11+ (Intel Mac) | x86_64 | ✅ Fully Supported |
 
 ### Windows Installation (C/C++)
 
@@ -181,6 +184,39 @@ with u3v_cam.Camera() as cam:
 | PyQt6 live viewer | `PyQt6` + `pyqtgraph` | `pip install PyQt6 pyqtgraph` |
 | Live preview | `opencv-python` | `pip install opencv-python` |
 
+### macOS Installation (C/C++)
+
+The macOS package (`V9-SDK-DYLIB-CUS.zip`) contains two per-architecture archives — pick the one that matches your Mac:
+
+```bash
+# 1. Extract the matching archive
+unzip u3v-viewer-macOS-AppleSilicon-arm64.zip    # Apple Silicon (M1/M2/M3/M4)
+# OR
+unzip u3v-viewer-macOS-Intel-x86_64.zip          # Intel Mac
+
+# 2. Install libusb (one-time; required for both GUI and SDK)
+#    Install Homebrew first if needed: https://brew.sh/
+brew install libusb
+
+# 3. Run the GUI viewer
+open u3v-viewer-macOS-*.dmg
+# Drag u3v_viewer.app to /Applications, then launch normally
+```
+
+> **Gatekeeper note**: If macOS blocks the unsigned app, right-click → **Open** → **Open Anyway** (first time only).
+
+For application development:
+
+```bash
+ARCH_DIR=sdk-pkg-arm64    # or sdk-pkg-intel
+
+clang my_app.c \
+    -I $ARCH_DIR/include \
+    -L $ARCH_DIR/lib -lu3v_cam \
+    -Wl,-rpath,@loader_path/lib \
+    -o my_app
+```
+
 ### C API Overview
 
 ```c
@@ -265,7 +301,7 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 | Directory / File | Purpose |
 | :--- | :--- |
-| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | InnoMaker U3V SDK packages (Windows DLL, Linux SO, Python) |
+| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | InnoMaker U3V SDK packages (Windows DLL, Linux SO, Python, macOS DYLIB) |
 | [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md) | Detailed SDK delivery notes and cross-platform reference |
 | [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer%26Aravis_PI5_Linux/) | eBUS Player and Aravis packages for Raspberry Pi 5 / Linux |
 | [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBUS Player download links |
