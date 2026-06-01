@@ -4,7 +4,7 @@ USB3 Vision (U3V) compliant camera SDK with cross-platform binaries,
 GUI viewer, and reference example.
 
 - **SDK version:** 2.1.1
-- **Last updated:** 2026-05-12
+- **Last updated:** 2026-06-01 (added macOS package)
 
 ---
 
@@ -18,11 +18,13 @@ GUI viewer, and reference example.
 | `V9-SDK-SO-CUS/` | Linux x64 / ARM64 | 1.4 MB | Extracted folder, ready to use |
 | `V9-SDK-PYTHON-CUS.zip` | Windows + Linux (x64 / ARM64) | 540 KB | Compressed Python package — bundles native libraries for all 3 platforms |
 | `V9-SDK-PYTHON-CUS/` | Windows + Linux (x64 / ARM64) | 1.2 MB | Extracted folder, ready to use |
+| `V9-SDK-DYLIB-CUS.zip` | macOS arm64 + x86_64 | 42 MB | Compressed macOS package — contains one per-arch zip (each ~22 MB) holding SDK + GUI |
+| `V9-SDK-DYLIB-CUS/` | macOS arm64 + x86_64 | 42 MB | Extracted folder with the two per-arch zips |
 
-All three packages share the same SDK source tree and the same underlying
+All four packages share the same SDK source tree and the same underlying
 shared library. Code written against the C API on Windows will compile and
-run unchanged on Linux; Python code written with `u3v_cam` runs unchanged
-on every supported platform.
+run unchanged on Linux or macOS; Python code written with `u3v_cam` runs
+unchanged on Windows and Linux (Python on macOS not yet shipped).
 
 ---
 
@@ -331,7 +333,82 @@ Or use `install_deps.bat` / `install_deps.sh` for an interactive prompt.
 
 ---
 
-## 6. Cross-Platform Quick Reference
+## 6. macOS Package (`V9-SDK-DYLIB-CUS`)
+
+### 6.1 Target Audience
+
+- **macOS 11 (Big Sur) or newer**
+- Apple Silicon (M1 / M2 / M3 / M4) **and** Intel Mac — one archive per architecture
+- Each archive is single-architecture (NOT universal); pick the one that matches your Mac
+- Prerequisites: Homebrew + `brew install libusb` (one command, see §6.3)
+
+Why per-architecture instead of a universal binary: Homebrew distributes
+single-architecture bottles (arm64 on Apple Silicon, x86_64 on Intel),
+which makes a fat Mach-O impractical to build on a single host. Building
+on the matching Mac is simpler and ships the same Mach-O architecture
+the customer actually runs.
+
+### 6.2 Folder Layout
+
+```
+V9-SDK-DYLIB-CUS/
+├── u3v-viewer-macOS-AppleSilicon-arm64.zip          Apple Silicon (M-series), ~22 MB
+│   ├── u3v-sdk-macOS-AppleSilicon-arm64.tar.gz      ← SDK (compiled .dylib + 10 headers)
+│   │   └── sdk-pkg-arm64/
+│   │       ├── lib/libu3v_cam.{dylib, 2.dylib, 2.1.1.dylib}
+│   │       └── include/u3v/*.h
+│   └── u3v-viewer-macOS-AppleSilicon-arm64.dmg      ← GUI viewer disk image (Qt6 bundled)
+└── u3v-viewer-macOS-Intel-x86_64.zip                Intel Mac, ~22 MB
+    └── (same internal layout — Intel x86_64 binaries)
+```
+
+### 6.3 Quick Start (End User)
+
+```bash
+# 1. Extract the matching archive for your Mac
+unzip u3v-viewer-macOS-AppleSilicon-arm64.zip       # M-series
+# OR
+unzip u3v-viewer-macOS-Intel-x86_64.zip             # Intel
+
+# 2. Install libusb (one-time; required for both GUI and SDK)
+#    Install Homebrew first if you don't have it: https://brew.sh/
+brew install libusb
+
+# 3. Run the GUI viewer
+open u3v-viewer-macOS-*.dmg
+# In the mounted disk image: drag u3v_viewer.app to /Applications
+# Then launch via Spotlight, Launchpad, or double-click in /Applications
+
+# 4. (Optional) Use the SDK from your own code
+tar xzf u3v-sdk-macOS-*.tar.gz
+cd sdk-pkg-arm64        # or sdk-pkg-intel
+# include/u3v/*.h and lib/libu3v_cam.dylib are now ready to use
+```
+
+If macOS Gatekeeper blocks the unsigned `.app` ("cannot be opened
+because the developer cannot be verified"):
+right-click → **Open** → **Open Anyway** (first time only;
+double-click works thereafter).
+
+### 6.4 Application Development
+
+```bash
+ARCH_DIR=sdk-pkg-arm64           # or sdk-pkg-intel
+
+clang my_app.c \
+    -I $ARCH_DIR/include \
+    -L $ARCH_DIR/lib -lu3v_cam \
+    -Wl,-rpath,@loader_path/lib \
+    -o my_app
+```
+
+The `@loader_path/lib` rpath lets `my_app` find `libu3v_cam.dylib`
+next to itself at runtime, so you can ship `my_app` together with the
+`lib/` folder — equivalent to the Linux `$ORIGIN/lib` pattern.
+
+---
+
+## 7. Cross-Platform Quick Reference
 
 | Aspect | Windows C/C++ | Linux C/C++ | Python |
 |---|---|---|---|
@@ -352,7 +429,7 @@ Or use `install_deps.bat` / `install_deps.sh` for an interactive prompt.
 
 ---
 
-## 7. Source Compatibility Across Platforms
+## 8. Source Compatibility Across Platforms
 
 The `include/u3v/*.h` headers are **identical** in the Windows and Linux
 C/C++ packages. Application code written on Windows can be recompiled on
@@ -410,7 +487,7 @@ _raw.camera_set_exposure(cam._handle, 5000)
 
 ---
 
-## 8. Compatibility Matrix
+## 9. Compatibility Matrix
 
 | Item | Value |
 |---|---|
@@ -428,7 +505,7 @@ _raw.camera_set_exposure(cam._handle, 5000)
 
 ---
 
-## 9. Delivery Notes
+## 10. Delivery Notes
 
 1. **Cloud share or email** — send the `.zip` / `.tar.gz` archive directly
 2. **USB stick or air-gapped sites** — copy the entire folder
@@ -436,10 +513,13 @@ _raw.camera_set_exposure(cam._handle, 5000)
    base for re-branding (logo, signing, license-key gating)
 4. **Choosing a package**
    - System integrators / desktop apps → `V9-SDK-DLL-CUS` (Windows) +
-     `V9-SDK-SO-CUS` (Linux)
+     `V9-SDK-SO-CUS` (Linux) + `V9-SDK-DYLIB-CUS` (macOS)
    - Python / ML / CV teams, headless capture, scripting → `V9-SDK-PYTHON-CUS`
-     (single archive covers Win + Linux, x64 + ARM64)
-   - The three packages are **non-exclusive** — same library, different
+     (single archive covers Win + Linux, x64 + ARM64; macOS Python
+     binding not yet shipped)
+   - macOS users: pick the matching per-arch zip inside `V9-SDK-DYLIB-CUS`
+     (Apple Silicon vs Intel) — see §6
+   - The four packages are **non-exclusive** — same library, different
      interface. A customer can deploy any combination.
 
 For technical support, contact the SDK provider.
