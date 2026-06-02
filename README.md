@@ -208,16 +208,20 @@ open u3v-viewer-macOS-*.dmg
 For application development:
 
 ```bash
+# Apple Silicon: extract gives sdk-pkg-arm64/
+# Intel Mac:    extract gives sdk-pkg-intel/
 ARCH_DIR=sdk-pkg-arm64    # or sdk-pkg-intel
 
 clang my_app.c \
     -I $ARCH_DIR/include \
     -L $ARCH_DIR/lib -lu3v_cam \
-    -Wl,-rpath,@loader_path/lib \
+    -Wl,-rpath,@executable_path/../lib \
     -o my_app
 ```
 
 ### C API Overview
+
+The following signatures are extracted directly from the SDK headers (`include/u3v/`):
 
 ```c
 /* Initialization */
@@ -230,17 +234,27 @@ int          u3v_discover(u3v_device_info_t *info, int max_devices);
 /* Camera control */
 u3v_status_t u3v_camera_open(u3v_camera_t **cam, int device_index);
 void         u3v_camera_close(u3v_camera_t *cam);
-u3v_status_t u3v_camera_set_exposure(u3v_camera_t *cam, uint32_t microseconds);
+u3v_status_t u3v_camera_set_exposure(u3v_camera_t *cam, uint32_t time_us);
+u3v_status_t u3v_camera_get_exposure(u3v_camera_t *cam, uint32_t *time_us);
 u3v_status_t u3v_camera_set_gain(u3v_camera_t *cam, uint32_t gain);
+u3v_status_t u3v_camera_get_gain(u3v_camera_t *cam, uint32_t *gain);
 u3v_status_t u3v_camera_set_trigger_mode(u3v_camera_t *cam, uint32_t mode);
+u3v_status_t u3v_camera_get_trigger_mode(u3v_camera_t *cam, uint32_t *mode);
+u3v_status_t u3v_camera_send_software_trigger(u3v_camera_t *cam);
+u3v_status_t u3v_camera_start(u3v_camera_t *cam);
+u3v_status_t u3v_camera_stop(u3v_camera_t *cam);
 
 /* Streaming */
-u3v_status_t u3v_stream_create(u3v_stream_t **stream, u3v_camera_t *cam, const u3v_stream_config_t *config);
+u3v_status_t u3v_stream_create(u3v_stream_t **stream, u3v_camera_t *cam,
+                                const u3v_stream_config_t *config);
 void         u3v_stream_destroy(u3v_stream_t *stream);
-u3v_status_t u3v_stream_grab(u3v_stream_t *stream, u3v_frame_t *frame, uint32_t timeout_ms);
+u3v_status_t u3v_buffer_alloc(u3v_buffer_t *buf, uint32_t size);
+void         u3v_buffer_free(u3v_buffer_t *buf);
+u3v_status_t u3v_stream_grab(u3v_stream_t *stream, u3v_buffer_t *buf);
+u3v_status_t u3v_buffer_save(const u3v_buffer_t *buf, const char *filename);
 ```
 
-For the complete API reference, see the headers in `include/u3v/`.
+For the complete API reference, see the headers in `include/u3v/` inside the SDK package.
 
 ---
 
