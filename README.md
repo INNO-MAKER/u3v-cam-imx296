@@ -146,14 +146,26 @@ run_viewer.bat          :: live PyQt6 viewer
 
 **Linux (Ubuntu 22.04, Debian 12+, Raspberry Pi OS Bookworm):**
 ```bash
-# Same prerequisites as the C/C++ Linux package (libusb-1.0-0 + udev rule above)
+# 1. Install runtime dependencies
+sudo apt update && sudo apt install -y libusb-1.0-0 python3-pip
+
+# 2. Install udev rule for non-root USB access (one-time, required)
+sudo tee /etc/udev/rules.d/99-u3v.rules > /dev/null <<'EOF'
+SUBSYSTEM=="usb", ATTRS{bDeviceClass}=="ef", ATTRS{bDeviceSubClass}=="02", ATTRS{bDeviceProtocol}=="01", MODE="0666", GROUP="plugdev"
+EOF
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo usermod -aG plugdev $USER
+# Log out and back in for the group change to take effect
+
+# 3. Extract and install the Python SDK
 unzip u3v-sdk-2.2.0-python.zip
 cd u3v-sdk-2.2.0-python
 chmod +x *.sh
 ./install_deps.sh
 ./run_basic_capture.sh
-./run_viewer.sh
 ```
+
+> **Important:** The udev rule in step 2 is required. Without it, the SDK will fail with a permission or protocol error when opening the camera, even if the device is detected.
 
 **Python API example:**
 ```python
