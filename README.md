@@ -1,12 +1,6 @@
 # U3V-CAM-IMX296 USB3 Vision Industrial Camera
 
 ![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_01.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_02.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_03.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_04.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_05.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_06.jpg "U3V-CAM-IMX296")
-![U3V-CAM-IMX296](./images/InnoMaker_USB3_Vision_Industrial_Camera_IMX296_1.58MP_Monochrome_Global_Shutter_1456x1088@60FPS_GenICam_Compliant_Hardware_Trigger_Strobe_Arbitrary_ROI_07.jpg "U3V-CAM-IMX296")
 
 The **U3V-CAM-IMX296** is a high-performance USB3 Vision industrial camera featuring the **Sony IMX296LLR** (monochrome) global shutter CMOS sensor. With a resolution of **1.58 MP (1456 × 1088)** and a full-resolution frame rate of **60 fps**, it provides reliable, distortion-free imaging for demanding machine-vision applications such as motion analysis, automation, robotics, and scientific imaging.
 
@@ -337,8 +331,6 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 **Contents:**
 - Preset OS image for Raspberry Pi 5 (ready to flash)
-- `V9-SDK-DLL-CUS.zip` — Windows C/C++ SDK
-
 ---
 
 ## Repository Structure
