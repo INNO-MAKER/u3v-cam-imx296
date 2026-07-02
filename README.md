@@ -57,22 +57,24 @@ For detailed hardware dimensions, connector parameters, and wiring diagrams, ref
 
 ## 2. InnoMaker SDK
 
-The **InnoMaker U3V SDK** (version 2.1.1) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library.
+The **InnoMaker U3V SDK** (version 2.2.0) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library. Version 2.2.0 adds color-camera support via a pluggable ISP chain (demosaic, white balance, gamma, color correction).
 
-**SDK version**: 2.1.1 — **Last updated**: 2026-06-01
+**SDK version**: 2.2.0 — **Last updated**: 2026-07-02
 
-For full delivery notes and package contents, see [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md).
+For full delivery notes and package contents, see [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md).
 
 ### Available Packages
 
 | Package | Platform | Size | Description |
 | :--- | :--- | :--- | :--- |
-| `V9-SDK-DLL-CUS.zip` | Windows x64 | 26 MB (zip) / 56 MB | C/C++ SDK with GUI viewer, CLI demo, headers, and bundled runtime |
-| `V9-SDK-SO-CUS.tar.gz` | Linux x64 / ARM64 | 520 KB (tar.gz) / 1.4 MB | C/C++ SDK with GUI viewer, CLI demo, and headers |
-| `V9-SDK-PYTHON-CUS.zip` | Windows + Linux x64 / ARM64 | 540 KB (zip) / 1.2 MB | Python SDK — bundles native libraries for all platforms |
-| `V9-SDK-DYLIB-CUS.zip` | macOS arm64 + x86_64 | 42 MB | macOS C/C++ SDK with GUI viewer — one per-arch zip inside (Apple Silicon + Intel) |
+| `u3v-sdk-2.2.0-windows-x64.zip` | Windows 10/11 x64 | 18 MB | C/C++ SDK + Qt6 viewer, fully self-contained |
+| `u3v-sdk-2.2.0-linux-x64.tar.gz` | Ubuntu 22.04+ x64 | 150 KB | C/C++ SDK + viewer (system Qt6 + libusb) |
+| `u3v-sdk-2.2.0-linux-arm64.tar.gz` | Pi 5 / Jetson Orin Nano | 150 KB | ARM64 counterpart of the Linux x64 package |
+| `u3v-sdk-2.2.0-macos-arm64.zip` | Apple Silicon (M1–M4) | 55 MB | C/C++ SDK + `u3v_viewer.app` |
+| `u3v-sdk-2.2.0-macos-x64.zip` | Intel Mac | 55 MB | Intel counterpart of the macOS arm64 package |
+| `u3v-sdk-2.2.0-python.zip` | All platforms | 1.1 MB | Python 3.8+ package; bundles native libraries for every platform |
 
-All four packages share the same SDK source tree and the same underlying shared library. The Python package wraps the identical C library via ctypes — no separate codepath.
+All packages share the same underlying SDK. Code written against the C API on Windows compiles and runs unchanged on Linux and macOS. The Python package wraps the identical C library via ctypes — no separate codepath.
 
 ### Supported Platforms
 
@@ -87,10 +89,10 @@ All four packages share the same SDK source tree and the same underlying shared 
 
 ### Windows Installation (C/C++)
 
-1. Extract `V9-SDK-DLL-CUS.zip` to any directory (e.g., `D:\u3v\`)
+1. Extract `u3v-sdk-2.2.0-windows-x64.zip` to any directory (e.g., `D:\u3v\`)
 2. Plug in the U3V camera
-3. Right-click `V9-SDK-DLL-CUS\tools\zadig-2.9.exe` → **Run as administrator** → install the WinUSB driver (see `WINUSB_DRIVER_INSTALL.md`)
-4. Double-click `run_viewer.bat` to launch the GUI viewer
+3. Run `tools\zadig-2.9.exe` as administrator → select the camera → choose **WinUSB** → click **Install Driver**
+4. Double-click `bin\u3v_viewer.exe` to launch the GUI viewer
 
 For application development, add `include\` to your include path, `lib\u3v_cam.lib` to your linker, and ensure `bin\` is on PATH at runtime.
 
@@ -131,15 +133,15 @@ gcc my_app.c \
     -o my_app
 ```
 
-### Python SDK (V9-SDK-PYTHON-CUS)
+### Python SDK (u3v-sdk-2.2.0-python)
 
-The Python package targets **Python 3.8–3.12** on Windows x64, Linux x64, and Linux ARM64. It is ideal for ML / computer-vision workflows, rapid prototyping, headless capture scripts, and Jupyter notebooks.
+The Python package targets **Python 3.8–3.12** on all five supported platforms (Windows, Linux x64/ARM64, macOS arm64/x64). It is ideal for ML / computer-vision workflows, rapid prototyping, headless capture scripts, and Jupyter notebooks.
 
 **Windows:**
 ```bat
-:: 1. Extract V9-SDK-PYTHON-CUS.zip
-:: 2. Install WinUSB driver (use Zadig from V9-SDK-DLL-CUS\tools\)
-:: 3. Open a command prompt in V9-SDK-PYTHON-CUS\
+:: 1. Extract u3v-sdk-2.2.0-python.zip
+:: 2. Install WinUSB driver (use Zadig from u3v-sdk-2.2.0-windows-x64\tools\)
+:: 3. Open a command prompt in u3v-sdk-2.2.0-python\
 install_deps.bat        :: installs numpy + optional viewer/cv2
 run_basic_capture.bat   :: smoke test
 run_viewer.bat          :: live PyQt6 viewer
@@ -148,8 +150,8 @@ run_viewer.bat          :: live PyQt6 viewer
 **Linux (Ubuntu 22.04, Debian 12+, Raspberry Pi OS Bookworm):**
 ```bash
 # Same prerequisites as the C/C++ Linux package (libusb-1.0-0 + udev rule above)
-unzip V9-SDK-PYTHON-CUS.zip
-cd V9-SDK-PYTHON-CUS
+unzip u3v-sdk-2.2.0-python.zip
+cd u3v-sdk-2.2.0-python
 chmod +x *.sh
 ./install_deps.sh
 ./run_basic_capture.sh
@@ -186,21 +188,21 @@ with u3v_cam.Camera() as cam:
 
 ### macOS Installation (C/C++)
 
-The macOS package (`V9-SDK-DYLIB-CUS.zip`) contains two per-architecture archives — pick the one that matches your Mac:
+Pick the archive that matches your Mac:
 
 ```bash
 # 1. Extract the matching archive
-unzip u3v-viewer-macOS-AppleSilicon-arm64.zip    # Apple Silicon (M1/M2/M3/M4)
+unzip u3v-sdk-2.2.0-macos-arm64.zip    # Apple Silicon (M1/M2/M3/M4)
 # OR
-unzip u3v-viewer-macOS-Intel-x86_64.zip          # Intel Mac
+unzip u3v-sdk-2.2.0-macos-x64.zip     # Intel Mac
 
 # 2. Install libusb (one-time; required for both GUI and SDK)
 #    Install Homebrew first if needed: https://brew.sh/
 brew install libusb
 
 # 3. Run the GUI viewer
-open u3v-viewer-macOS-*.dmg
-# Drag u3v_viewer.app to /Applications, then launch normally
+cd u3v-sdk-2.2.0-macos-*
+open bin/u3v_viewer.app
 ```
 
 > **Gatekeeper note**: If macOS blocks the unsigned app, right-click → **Open** → **Open Anyway** (first time only).
@@ -208,14 +210,10 @@ open u3v-viewer-macOS-*.dmg
 For application development:
 
 ```bash
-# Apple Silicon: extract gives sdk-pkg-arm64/
-# Intel Mac:    extract gives sdk-pkg-intel/
-ARCH_DIR=sdk-pkg-arm64    # or sdk-pkg-intel
-
 clang my_app.c \
-    -I $ARCH_DIR/include \
-    -L $ARCH_DIR/lib -lu3v_cam \
-    -Wl,-rpath,@executable_path/../lib \
+    -I ./include \
+    -L ./lib -lu3v_cam \
+    -Wl,-rpath,@loader_path/lib \
     -o my_app
 ```
 
@@ -258,7 +256,33 @@ For the complete API reference, see the headers in `include/u3v/` inside the SDK
 
 ---
 
-## 3. Third Party SDK
+## 3. Windows Driver Switching (InnoMaker SDK ↔ eBUS Player)
+
+On Windows, the **InnoMaker SDK** uses the **WinUSB** driver, while **eBUS Player / eBUS SDK** installs its own **Pleora USB** driver. These two drivers are mutually exclusive — only one can be active at a time for the same device.
+
+When switching between the two, follow these steps:
+
+**Step 1: Uninstall the current driver**
+
+1. Open **Device Manager** (`Win + X` → Device Manager)
+2. Locate the camera under **Universal Serial Bus devices** or **Imaging devices**
+3. Right-click the device → **Uninstall device**
+4. Check **Delete the driver software for this device** (if prompted), then click **Uninstall**
+5. Unplug the camera and plug it back in
+
+**Step 2: Install the target driver**
+
+- **Switch to InnoMaker SDK (WinUSB):**
+  Run `tools\zadig-2.9.exe` from the `u3v-sdk-2.2.0-windows-x64` package, select the camera device, choose **WinUSB**, and click **Install Driver**.
+
+- **Switch to eBUS Player (Pleora USB):**
+  Launch the eBUS SDK installer or eBUS Player — it will automatically install the Pleora USB driver on first run.
+
+> **Tip:** If the camera is not recognized after switching, try unplugging and replugging the USB cable, or restart the computer.
+
+---
+
+## 4. Third Party SDK
 
 The U3V-CAM-IMX296 is 100% USB3 Vision / GenICam compliant and works out-of-the-box with any standard-compliant software. The following third-party tools are verified and supported.
 
@@ -315,8 +339,9 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 | Directory / File | Purpose |
 | :--- | :--- |
-| [`InnoMaker_SDK_Libusb_Win_Linux/`](./InnoMaker_SDK_Libusb_Win_Linux/) | InnoMaker U3V SDK packages (Windows DLL, Linux SO, Python, macOS DYLIB) |
-| [`InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Libusb_Win_Linux/DELIVERY_OVERVIEW.md) | Detailed SDK delivery notes and cross-platform reference |
+| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/) | InnoMaker U3V SDK v2.2.0 packages (Windows, Linux x64/ARM64, macOS, Python) |
+| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md) | Detailed SDK delivery notes and cross-platform reference |
+| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/RELEASE_NOTES.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/RELEASE_NOTES.md) | SDK changelog and version history |
 | [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer%26Aravis_PI5_Linux/) | eBUS Player and Aravis packages for Raspberry Pi 5 / Linux |
 | [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBUS Player download links |
 | [`PreInstalled-IMG-PI5/`](./PreInstalled-IMG-PI5/) | Download link for pre-configured Raspberry Pi 5 OS image |
