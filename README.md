@@ -99,8 +99,11 @@ For application development, add `include\` to your include path, `lib\u3v_cam.l
 ### Linux Installation (C/C++)
 
 ```bash
-tar xzf V9-SDK-SO-CUS.tar.gz
-cd V9-SDK-SO-CUS
+# Extract the matching package
+tar xzf u3v-sdk-2.2.0-linux-x64.tar.gz      # x86_64
+# or
+tar xzf u3v-sdk-2.2.0-linux-arm64.tar.gz    # Pi 5 / Jetson Orin Nano
+cd u3v-sdk-2.2.0-linux-*
 
 # Install runtime dependencies (one-time)
 sudo apt update && sudo apt install -y libusb-1.0-0 libqt6widgets6
@@ -114,21 +117,15 @@ sudo usermod -aG plugdev $USER
 # Log out and back in for the group change to take effect
 
 # Launch the GUI viewer
-case "$(uname -m)" in
-    x86_64)  cd ubuntu22.04-x64 ;;
-    aarch64) cd ubuntu22.04-arm64 ;;
-esac
 ./run_viewer.sh
 ```
 
 For application development:
 
 ```bash
-ARCH_DIR=ubuntu22.04-x64    # or ubuntu22.04-arm64
-
 gcc my_app.c \
-    -I$ARCH_DIR/include \
-    -L$ARCH_DIR/lib -lu3v_cam \
+    -I ./include \
+    -L ./lib -lu3v_cam \
     -Wl,-rpath,'$ORIGIN/lib' \
     -o my_app
 ```
