@@ -357,6 +357,42 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 ---
 
+## FAQ & Troubleshooting
+
+### AcquisitionFrameRate has no effect — camera always runs at ~60 fps
+
+The IMX296 sensor controls frame rate through **exposure time**, not through the `AcquisitionFrameRate` GenICam feature. The `AcquisitionFrameRate` register is present in the camera's XML manifest but is not implemented in firmware and has no effect on actual output frame rate.
+
+**To reduce frame rate, set a longer exposure time:**
+
+| Target Frame Rate | Minimum ExposureTime |
+| :--- | :--- |
+| 30 fps | > 33,333 µs |
+| 10 fps | > 100,000 µs |
+| 5 fps | > 200,000 µs |
+| 1 fps | > 1,000,000 µs |
+
+When the exposure time exceeds one frame period, the sensor automatically extends the frame interval to accommodate the exposure, effectively reducing the frame rate.
+
+> **Important:** After switching to long-exposure mode, you must **re-apply the ROI / resolution settings** for the change to take effect correctly. Set exposure time first, then re-configure width, height, and offset.
+
+**Example (InnoMaker Python SDK):**
+```python
+with u3v_cam.Camera() as cam:
+    cam.exposure_us = 200000   # 200 ms → ~5 fps
+    cam.set_roi(1456, 1088)    # re-apply resolution after changing exposure
+    cam.start()
+    frame = cam.grab()
+```
+
+**Example (Aravis Python):**
+```python
+cam.set_exposure_time(200000)   # 200 ms
+cam.set_region(0, 0, 1456, 1088)  # re-apply ROI
+```
+
+---
+
 ## Support
 
 *   **Website**: [www.inno-maker.com](https://www.inno-maker.com)
