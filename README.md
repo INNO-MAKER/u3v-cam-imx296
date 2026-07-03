@@ -159,27 +159,6 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 ---
 
-## FAQ & Troubleshooting
-
-### AcquisitionFrameRate has no effect — camera always runs at ~60 fps
-
-The IMX296 sensor controls frame rate through **exposure time** and **ROI width**, not through the `AcquisitionFrameRate` GenICam feature. The `AcquisitionFrameRate` register is present in the camera's XML manifest but is not implemented in firmware and has no effect on actual output frame rate.
-
-**To reduce frame rate, set a longer exposure time:**
-
-| Target Frame Rate | Minimum ExposureTime |
-| :--- | :--- |
-| 30 fps | > 33,333 µs |
-| 10 fps | > 100,000 µs |
-| 5 fps | > 200,000 µs |
-| 1 fps | > 1,000,000 µs |
-
-When the exposure time exceeds one frame period, the sensor automatically extends the frame interval to accommodate the exposure, effectively reducing the frame rate. Reducing ROI width also increases the maximum achievable frame rate.
-
-For code examples, see [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md §6.4`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md).
-
----
-
 ## Support
 
 *   **Website**: [www.inno-maker.com](https://www.inno-maker.com)
