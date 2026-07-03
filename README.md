@@ -176,14 +176,12 @@ print(u3v_cam.list_cameras())
 
 # Open, configure, capture
 with u3v_cam.Camera() as cam:
-    # Frame rate is controlled by exposure time, not cam.frame_rate.
-    # exposure_us = 5000 µs → sensor runs at maximum ~60 fps.
-    # To reduce frame rate, increase exposure_us (e.g. 33333 µs → ~30 fps).
-    cam.exposure_us  = 5000
-    cam.gain         = 0
-    cam.set_roi(1456, 1088)    # set ROI after exposure to ensure correct timing
+    cam.set_roi(1456, 1088)
     cam.pixel_format = u3v_cam.PFNC_MONO8
     cam.start()
+    cam.exposure_us  = 5000
+    cam.gain         = 0
+    cam.frame_rate   = 60
     for _ in range(60):
         frame = cam.read_frame()   # numpy.ndarray (H, W) uint8
     cam.stop()
@@ -376,15 +374,18 @@ The IMX296 sensor controls frame rate through **exposure time**, not through the
 
 When the exposure time exceeds one frame period, the sensor automatically extends the frame interval to accommodate the exposure, effectively reducing the frame rate.
 
-> **Important:** After switching to long-exposure mode, you must **re-apply the ROI / resolution settings** for the change to take effect correctly. Set exposure time first, then re-configure width, height, and offset.
+> **Important:** Exposure time, gain, and frame rate must be set **after** `cam.start()`. ROI and pixel format are configured before `start()`. After changing exposure to long-exposure mode, the new frame rate takes effect immediately on the next frame.
 
 **Example (InnoMaker Python SDK):**
 ```python
 with u3v_cam.Camera() as cam:
-    cam.exposure_us = 200000   # 200 ms → ~5 fps
-    cam.set_roi(1456, 1088)    # re-apply resolution after changing exposure
+    cam.set_roi(1456, 1088)
+    cam.pixel_format = u3v_cam.PFNC_MONO8
     cam.start()
-    frame = cam.grab()
+    cam.exposure_us = 200000   # 200 ms → ~5 fps; set after start()
+    cam.gain        = 0
+    frame = cam.read_frame()
+    cam.stop()
 ```
 
 **Example (Aravis Python):**
