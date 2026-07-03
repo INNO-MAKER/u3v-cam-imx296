@@ -176,11 +176,13 @@ print(u3v_cam.list_cameras())
 
 # Open, configure, capture
 with u3v_cam.Camera() as cam:
-    cam.set_roi(1456, 1088)
-    cam.pixel_format = u3v_cam.PFNC_MONO8
+    # Frame rate is controlled by exposure time, not cam.frame_rate.
+    # exposure_us = 5000 µs → sensor runs at maximum ~60 fps.
+    # To reduce frame rate, increase exposure_us (e.g. 33333 µs → ~30 fps).
     cam.exposure_us  = 5000
     cam.gain         = 0
-    cam.frame_rate   = 60
+    cam.set_roi(1456, 1088)    # set ROI after exposure to ensure correct timing
+    cam.pixel_format = u3v_cam.PFNC_MONO8
     cam.start()
     for _ in range(60):
         frame = cam.read_frame()   # numpy.ndarray (H, W) uint8
