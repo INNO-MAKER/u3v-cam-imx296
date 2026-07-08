@@ -4,7 +4,7 @@ USB3 Vision (U3V) compliant camera SDK with cross-platform binaries,
 GUI viewer, reference examples, and an optional image-signal-processing
 (ISP) plugin framework for color sensors.
 
-- **SDK version:** 2.2.1
+- **SDK version:** 2.2.2
 - **Last updated:** 2026-07-02
 - **What's new in 2.2.0:** color-camera support via a pluggable ISP
   chain (demosaic, white balance, gamma, color correction). See §7.
@@ -18,12 +18,12 @@ target platform.
 
 | File | Platform | Size | Purpose |
 |---|---|---|---|
-| `u3v-sdk-2.2.1-windows-x64.zip`   | Windows 10/11 x64 | 18 MB | C/C++ SDK + Qt6 viewer, fully self-contained |
-| `u3v-sdk-2.2.1-linux-x64.tar.gz`  | Ubuntu 22.04+ x64 | 150 KB | C/C++ SDK + viewer (system Qt6 + libusb) |
-| `u3v-sdk-2.2.1-linux-arm64.tar.gz`| Pi 5 / Jetson Orin Nano | 150 KB | ARM64 counterpart of the Linux x64 package |
-| `u3v-sdk-2.2.1-macos-arm64.zip`   | Apple Silicon (M1–M4) | 55 MB | C/C++ SDK + `u3v_viewer.app` |
-| `u3v-sdk-2.2.1-macos-x64.zip`     | Intel Mac | 55 MB | Intel counterpart of the macOS arm64 package |
-| `u3v-sdk-2.2.1-python.zip`        | All five OS/arch above | 1.1 MB | Python 3.8+ package; bundles native libraries for every platform in one archive |
+| `u3v-sdk-2.2.2-windows-x64.zip`   | Windows 10/11 x64 | 18 MB | C/C++ SDK + Qt6 viewer, fully self-contained |
+| `u3v-sdk-2.2.2-linux-x64.tar.gz`  | Ubuntu 22.04+ x64 | 150 KB | C/C++ SDK + viewer (system Qt6 + libusb) |
+| `u3v-sdk-2.2.2-linux-arm64.tar.gz`| Pi 5 / Jetson Orin Nano | 150 KB | ARM64 counterpart of the Linux x64 package |
+| `u3v-sdk-2.2.2-macos-arm64.zip`   | Apple Silicon (M1–M4) | 55 MB | C/C++ SDK + `u3v_viewer.app` |
+| `u3v-sdk-2.2.2-macos-x64.zip`     | Intel Mac | 55 MB | Intel counterpart of the macOS arm64 package |
+| `u3v-sdk-2.2.2-python.zip`        | All five OS/arch above | 1.1 MB | Python 3.8+ package; bundles native libraries for every platform in one archive |
 
 All packages share the same underlying SDK. Code written against the C
 API on Windows compiles and runs unchanged on Linux and macOS. Python
@@ -37,7 +37,7 @@ u3v-sdk-<version>-<os>-<arch>.<ext>
 ```
 
 The archive extracts to a top-level folder with the same base name
-(e.g. `u3v-sdk-2.2.1-windows-x64/`), so multiple platforms can coexist
+(e.g. `u3v-sdk-2.2.2-windows-x64/`), so multiple platforms can coexist
 in one directory without collisions.
 
 ---
@@ -59,7 +59,7 @@ not** change per sensor.
 
 ---
 
-## 3. Windows Package (`u3v-sdk-2.2.1-windows-x64.zip`)
+## 3. Windows Package (`u3v-sdk-2.2.2-windows-x64.zip`)
 
 ### 3.1 Target Audience
 
@@ -71,7 +71,7 @@ not** change per sensor.
 ### 3.2 Folder Layout
 
 ```
-u3v-sdk-2.2.1-windows-x64/
+u3v-sdk-2.2.2-windows-x64/
 ├── README.txt                    Quick-start pointer
 ├── bin/                          All runtime files (~18 MB, self-contained)
 │   ├── u3v_viewer.exe            GUI viewer
@@ -95,7 +95,7 @@ u3v-sdk-2.2.1-windows-x64/
 ### 3.3 Quick Start (End User)
 
 ```
-1. Extract u3v-sdk-2.2.1-windows-x64.zip to any directory
+1. Extract u3v-sdk-2.2.2-windows-x64.zip to any directory
 2. Plug in the U3V camera
 3. If the device isn't recognized, install the WinUSB driver
    (see the WinUSB installation guide shipped with prior packages,
@@ -121,7 +121,7 @@ Linking the SDK into your own program:
 
 ---
 
-## 4. Linux Package (`u3v-sdk-2.2.1-linux-x64.tar.gz` / `-linux-arm64.tar.gz`)
+## 4. Linux Package (`u3v-sdk-2.2.2-linux-x64.tar.gz` / `-linux-arm64.tar.gz`)
 
 ### 4.1 Target Audience
 
@@ -135,7 +135,7 @@ the compiled binaries differs.
 ### 4.2 Folder Layout
 
 ```
-u3v-sdk-2.2.1-linux-<arch>/
+u3v-sdk-2.2.2-linux-<arch>/
 ├── bin/
 │   ├── u3v_viewer                GUI viewer
 │   ├── basic_capture             CLI capture demo
@@ -145,8 +145,8 @@ u3v-sdk-2.2.1-linux-<arch>/
 │       └── u3v_ccm.so
 ├── lib/
 │   ├── libu3v_cam.so             → libu3v_cam.so.2
-│   ├── libu3v_cam.so.2           → libu3v_cam.so.2.2.1
-│   └── libu3v_cam.so.2.2.1       Actual library
+│   ├── libu3v_cam.so.2           → libu3v_cam.so.2.2.2
+│   └── libu3v_cam.so.2.2.2       Actual library
 ├── include/u3v/*.h               Public API headers (7 files)
 ├── examples/
 │   └── basic_capture.c           Compilable reference source
@@ -159,10 +159,10 @@ u3v-sdk-2.2.1-linux-<arch>/
 
 ```bash
 # 1. Extract for your architecture
-tar xzf u3v-sdk-2.2.1-linux-x64.tar.gz          # x86_64 PC / Docker
+tar xzf u3v-sdk-2.2.2-linux-x64.tar.gz          # x86_64 PC / Docker
 # or
-tar xzf u3v-sdk-2.2.1-linux-arm64.tar.gz        # Pi 5 / Jetson
-cd u3v-sdk-2.2.1-linux-*
+tar xzf u3v-sdk-2.2.2-linux-arm64.tar.gz        # Pi 5 / Jetson
+cd u3v-sdk-2.2.2-linux-*
 
 # 2. Install runtime dependencies (one-time)
 sudo apt update
@@ -196,7 +196,7 @@ next to itself at runtime, so you can ship the binary together with the
 
 ---
 
-## 5. macOS Packages (`u3v-sdk-2.2.1-macos-arm64.zip` / `-macos-x64.zip`)
+## 5. macOS Packages (`u3v-sdk-2.2.2-macos-arm64.zip` / `-macos-x64.zip`)
 
 ### 5.1 Target Audience
 
@@ -212,7 +212,7 @@ a single host. Building on the matching Mac keeps the toolchain simple.
 ### 5.2 Folder Layout
 
 ```
-u3v-sdk-2.2.1-macos-<arch>/
+u3v-sdk-2.2.2-macos-<arch>/
 ├── bin/
 │   ├── u3v_viewer.app            GUI viewer bundle (Qt6 embedded)
 │   ├── basic_capture             CLI capture demo
@@ -222,8 +222,8 @@ u3v-sdk-2.2.1-macos-<arch>/
 │       └── u3v_ccm.dylib
 ├── lib/
 │   ├── libu3v_cam.dylib          → libu3v_cam.2.dylib
-│   ├── libu3v_cam.2.dylib        → libu3v_cam.2.2.1.dylib
-│   └── libu3v_cam.2.2.1.dylib    Actual library
+│   ├── libu3v_cam.2.dylib        → libu3v_cam.2.2.2.dylib
+│   └── libu3v_cam.2.2.2.dylib    Actual library
 ├── include/u3v/*.h               Public API headers (7 files)
 ├── examples/basic_capture.c      Compilable reference source
 ├── docs/CHANGELOG.md              Release notes
@@ -234,11 +234,11 @@ u3v-sdk-2.2.1-macos-<arch>/
 
 ```bash
 # 1. Extract the matching archive
-unzip u3v-sdk-2.2.1-macos-arm64.zip     # Apple Silicon
+unzip u3v-sdk-2.2.2-macos-arm64.zip     # Apple Silicon
 # or
-unzip u3v-sdk-2.2.1-macos-x64.zip       # Intel
+unzip u3v-sdk-2.2.2-macos-x64.zip       # Intel
 
-cd u3v-sdk-2.2.1-macos-*
+cd u3v-sdk-2.2.2-macos-*
 
 # 2. Install libusb (one-time). Install Homebrew first if you don't
 #    have it: https://brew.sh/
@@ -268,7 +268,7 @@ pattern.
 
 ---
 
-## 6. Python Package (`u3v-sdk-2.2.1-python.zip`)
+## 6. Python Package (`u3v-sdk-2.2.2-python.zip`)
 
 ### 6.1 Target Audience
 
@@ -284,7 +284,7 @@ matching binary at import time.
 ### 6.2 Folder Layout
 
 ```
-u3v-sdk-2.2.1-python/
+u3v-sdk-2.2.2-python/
 ├── README.md                       Detailed Python usage guide
 ├── pyproject.toml                  PEP 517 metadata (`pip install .` works)
 ├── install_deps.bat / .sh          One-click dependency installer
@@ -314,7 +314,7 @@ u3v-sdk-2.2.1-python/
 
 **Windows:**
 ```bat
-:: 1. Extract u3v-sdk-2.2.1-python.zip
+:: 1. Extract u3v-sdk-2.2.2-python.zip
 :: 2. Plug in the U3V camera (install WinUSB driver if needed)
 :: 3. Open a command prompt in the extracted folder
 install_deps.bat
@@ -324,8 +324,8 @@ run_viewer.bat
 
 **Linux / macOS:**
 ```bash
-unzip u3v-sdk-2.2.1-python.zip
-cd u3v-sdk-2.2.1-python
+unzip u3v-sdk-2.2.2-python.zip
+cd u3v-sdk-2.2.2-python
 chmod +x *.sh
 ./install_deps.sh
 ./run_basic_capture.sh
@@ -519,7 +519,7 @@ _raw.camera_set_exposure(cam._handle, 5000)
 
 | Item | Value |
 |---|---|
-| SDK version | 2.2.1 |
+| SDK version | 2.2.2 |
 | USB protocol | USB3 Vision (U3V) v1.x compliant |
 | Windows requirement | Windows 10 build 1809 or newer; all Windows 11 |
 | Linux glibc requirement | 2.35 or newer (Ubuntu 22.04+) |
@@ -530,7 +530,7 @@ _raw.camera_set_exposure(cam._handle, 5000)
 | Python version | 3.8 – 3.12, CPython |
 | Required Python packages | `numpy>=1.20` |
 | Optional Python packages | `PyQt6 + pyqtgraph` (viewer), `opencv-python` (live preview) |
-| Application binary compatibility | 2.1.x / 2.2.0 code links and runs against 2.2.1 without recompile (SONAME libu3v_cam.so.2 unchanged) |
+| Application binary compatibility | 2.1.x / 2.2.x code links and runs against 2.2.2 without recompile (SONAME libu3v_cam.so.2 unchanged) |
 
 ---
 
@@ -544,11 +544,11 @@ _raw.camera_set_exposure(cam._handle, 5000)
    a base for re-branding (logo, code-signing, license-key gating).
 4. **Choosing a package**
    - Desktop applications, system integrators →
-     `u3v-sdk-2.2.1-windows-x64.zip` and/or
-     `u3v-sdk-2.2.1-linux-<arch>.tar.gz` and/or
-     `u3v-sdk-2.2.1-macos-<arch>.zip`
+     `u3v-sdk-2.2.2-windows-x64.zip` and/or
+     `u3v-sdk-2.2.2-linux-<arch>.tar.gz` and/or
+     `u3v-sdk-2.2.2-macos-<arch>.zip`
    - Python / ML / CV teams, headless capture, scripting →
-     `u3v-sdk-2.2.1-python.zip` (single file covers all five platforms)
+     `u3v-sdk-2.2.2-python.zip` (single file covers all five platforms)
    - Color-camera users on any platform → the same package as above
      plus the ISP plugins in `bin/plugins/`
    - Packages are **non-exclusive** — same underlying library, different
