@@ -1,0 +1,53 @@
+# U3V Camera SDK — Release Notes
+
+**Version:** 2.2.1
+**Date:** 2026-07-03
+**Type:** Bug fix release (ABI-compatible)
+
+---
+
+## What's Fixed
+
+### `Camera.info` fields
+Manufacturer, model, and serial number strings now return their full
+values correctly on all supported camera firmware.
+
+### Frame rate control
+`cam.frame_rate = N` / `u3v_camera_set_frame_rate()` now takes effect
+reliably whether called before or during streaming.
+`u3v_camera_get_frame_rate()` / reading `cam.frame_rate` returns the
+actual configured FPS.
+
+### Console output
+SDK initialization no longer emits diagnostic messages to stderr in
+normal operation. The SDK's behavior itself is unchanged — only the
+console noise is quieted.
+
+---
+
+## Compatibility
+
+**Drop-in binary replacement — no source changes, no relink required.**
+
+- C/C++: replace `libu3v_cam.so.2.2.0` with `libu3v_cam.so.2.2.1`
+  (SONAME `libu3v_cam.so.2` unchanged). On Windows, replace
+  `u3v_cam.dll`. On macOS, replace `libu3v_cam.dylib`.
+- Python: replace the `u3v-sdk-2.2.1-python.zip` package.
+
+All existing 2.2.0 application code continues to work unchanged.
+
+---
+
+## Supported Platforms
+
+| OS | Architecture | Package |
+|---|---|---|
+| Windows 10 / 11 | x64 | `u3v-sdk-2.2.1-windows-x64.zip` |
+| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.2.1-linux-x64.tar.gz` |
+| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.2.1-linux-arm64.tar.gz` |
+| macOS 11+ | Apple Silicon | `u3v-sdk-2.2.1-macos-arm64.zip` |
+| macOS 11+ | Intel x64 | `u3v-sdk-2.2.1-macos-x64.zip` |
+| Python 3.8+ | Any of the above | `u3v-sdk-2.2.1-python.zip` |
+
+For installation and usage instructions, see the package README or
+contact the SDK provider.
