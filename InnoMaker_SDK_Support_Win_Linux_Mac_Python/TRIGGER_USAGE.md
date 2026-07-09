@@ -1,39 +1,56 @@
-# U3V-CAM-IMX296 — External Trigger Usage Guide
+# U3V Camera SDK — External Trigger Usage Guide
 
 **Version:** 2.2.2
-**Example host:** Arduino UNO driving Trig+ / +5 V
+**Camera in this package:** U3V-CAM-IMX296
 
-This guide covers how to drive the hardware trigger input with a 5 V
-logic source (Arduino UNO used as the reference) and how to configure
-the camera on the SDK side to accept it.
+This document is applicable to any U3V-compliant camera in the
+InnoMaker U3V SDK family. Wiring, host code, and SDK trigger
+configuration are identical across sensors. Only the four
+**sensor-specific reference values** in §1 change per product; look
+them up in the corresponding camera's User Manual, Chapter 3.
 
-For the definitive electrical and timing specification, see the
-**U3V-CAM-IMX296 User Manual, Chapter 3** (Trigger & Strobe Timing)
+Common trigger sources covered: Arduino, Raspberry Pi, NVIDIA Jetson,
+STM32 / ESP32 / generic microcontroller, TTL function generator, and
+24 V PLC output.
+
+For the electrical and timing spec of the camera in this package, see
+the **U3V-CAM-IMX296 User Manual, Chapter 3** (Trigger & Strobe Timing)
 and **Chapter 4.4** (Trigger IN Circuit Diagrams).
 
 ---
 
-## 1. Minimum Trigger Pulse Width
+## 1. Sensor-Specific Reference Values
 
-The camera's hardware trigger input requires a minimum pulse width of:
+The following four values change per camera model. Values below apply
+to **U3V-CAM-IMX296**. When integrating another camera in the family
+(e.g. IMX585, IMX9281), replace them with the numbers from that
+camera's User Manual, Chapter 3.
 
-> **tH ≥ 14.815 µs**
+| Parameter | U3V-CAM-IMX296 | Manual reference |
+|---|---|---|
+| Min. trigger pulse width (tH) | **14.815 µs** | Ch. 3.1 |
+| Full-ROI resolution | 1456 x 1088 | Ch. 1.2 |
+| Max frame rate @ full ROI (MONO8) | 60 fps | Ch. 1.2 |
+| Frame readout time @ full ROI | ~16.7 ms | Derived from max fps |
 
-(per User Manual, Chapter 3.1)
+### 1.1 Minimum trigger pulse width
+
+The hardware trigger input requires:
+
+> **Pulse width >= tH**
 
 Pulses shorter than tH are not guaranteed to be recognized.
 
-Recommended pulse widths when driving from Arduino UNO:
+Recommended pulse widths (host-agnostic):
 
 | Priority | Pulse width | When to use |
 |---|---|---|
-| Minimum | 15 µs | At spec, no margin |
+| Minimum | tH + margin (e.g. 15 µs for IMX296) | At spec, no margin |
 | Recommended | 50 µs | Comfortable margin, tolerant of wiring jitter |
 | Conservative | 100 µs | Long cables or noisy environments |
+| Slow sources | 1 ms+ | Shell scripts, PLC scan cycles |
 
----
-
-## 2. Trigger Period Limits
+### 1.2 Trigger period limits
 
 Each trigger produces one frame. The trigger period **T** must satisfy:
 
@@ -42,31 +59,66 @@ T >= ExposureTime + FrameReadoutTime
 T >= 1 / MaxFrameRate(currentROI)
 ```
 
-- At full resolution 1456 x 1088 MONO8, the sustained rate is 60 fps
-  (~16.7 ms per frame).
+- For U3V-CAM-IMX296 at full ROI: T >= max(Exposure + 16.7 ms, 16.7 ms)
+  — max ~60 fps.
 - Reduced-height ROIs raise the ceiling proportionally (frame rate is
   inversely proportional to active rows).
 - Triggers arriving faster than the sustainable rate are dropped.
 
 ---
 
-## 3. Wiring (Arduino UNO to Camera)
+## 2. Signal Level and Wiring
 
-| Signal | Arduino UNO | Camera side |
+The `Trig+` / `Trig-` input is opto-isolated and accepts **3.3 V – 24 V**
+logic. Wiring by source type:
+
+| Source | Logic level | Series resistor | Notes |
+|---|---|---|---|
+| Arduino UNO / Nano / Mega | 5 V | Not required | Direct GPIO drive |
+| TTL function generator | 5 V | Not required | 50 Ω output OK |
+| Raspberry Pi 4 / 5 GPIO | 3.3 V | Not required | Direct GPIO drive |
+| NVIDIA Jetson GPIO | 3.3 V | Not required | Direct GPIO drive |
+| STM32 / ESP32 / generic MCU | 3.3 V | Not required | Any push-pull GPIO |
+| Industrial PLC output | 12 V | ~340 Ω external | See §3.2 |
+| Industrial PLC output | 24 V | ~940 Ω (1 kΩ) external | See §3.2 |
+
+**Camera pinout** (Hirose HR10A-7P-6S cable):
+
+| Signal | Camera pin | Cable colour |
 |---|---|---|
-| Trigger signal | Digital output pin (D2..D13) | Pin 2 — Trig+ (White/Brown) |
-| Common ground  | GND | Pin 5 — Trig-/GND_ISO (Yellow) |
+| Trig+ | Pin 2 | White / Brown |
+| Trig- / GND_ISO | Pin 5 | Yellow |
 
-- Camera trigger input is opto-isolated, 5–24 V (User Manual 4.4).
-- Arduino UNO HIGH is approximately 5.0 V — inside spec.
-- Arduino GPIO can drive the opto-input directly (no external resistor
-  required for the 5 V configuration).
+### 2.1 Direct-drive (3.3 V or 5 V logic)
+
+Connect the source GPIO to Pin 2 (Trig+) and its ground to Pin 5
+(Trig-). No external components required.
+
+### 2.2 Higher-voltage sources (12 V / 24 V PLC)
+
+For `VCC > 5 V`, add an external series resistor per the formula in
+User Manual Chapter 4.4.1:
+
+```
+R_add = R_total - R_onboard
+      = (VCC - Vf) / I - 200 Ω
+```
+
+with `Vf ≈ 1.25 V` and `I ≈ 20 mA`. Round up to the nearest standard
+value.
+
+| VCC | R_add (typical) |
+|---|---|
+| 12 V | 340 Ω (use 330 Ω / 360 Ω) |
+| 24 V | 940 Ω (use 1 kΩ) |
 
 ---
 
-## 4. Arduino UNO Code Examples
+## 3. Host-Side Trigger Code
 
-### 4.1 Single-pulse trigger
+### 3.1 Arduino UNO / Nano / Mega (5 V)
+
+Single pulse:
 ```cpp
 const int  TRIG_PIN = 8;
 const long PULSE_US = 50;   // >= 15 us required, 50 us recommended
@@ -88,7 +140,7 @@ void loop() {
 }
 ```
 
-### 4.2 Fixed-rate trigger (drift-free scheduling)
+Fixed-rate (drift-free scheduling):
 ```cpp
 const int  TRIG_PIN  = 8;
 const long PULSE_US  = 50;
@@ -111,31 +163,120 @@ void loop() {
 }
 ```
 
-### 4.3 Burst trigger (pairs with SDK MultiFrame mode)
-```cpp
-const int  TRIG_PIN = 8;
-const int  BURST    = 5;
-const long PULSE_US = 50;
-const long GAP_MS   = 20;    // >= Exposure + Readout
+### 3.2 Raspberry Pi 4 / 5 — shell (`gpioset`)
 
-void burst() {
-    for (int i = 0; i < BURST; i++) {
-        digitalWrite(TRIG_PIN, HIGH);
-        delayMicroseconds(PULSE_US);
-        digitalWrite(TRIG_PIN, LOW);
-        delay(GAP_MS);
-    }
+Pi 5 uses `gpiochip0` by default; Pi 4 with Bookworm uses `gpiochip4`.
+Adjust `--chip` accordingly.
+
+```bash
+#!/usr/bin/env bash
+# 1 Hz trigger from GPIO23, ~2 ms pulse width.
+CHIP=gpiochip0
+LINE=23
+while true; do
+    gpioset $CHIP $LINE=1
+    sleep 0.002
+    gpioset $CHIP $LINE=0
+    sleep 1.0
+done
+```
+
+For sub-millisecond pulses, use the C or Python interface below —
+`gpioset` + `sleep` cannot reach 15 µs reliably.
+
+### 3.3 Raspberry Pi — Python (`lgpio`)
+
+```python
+import lgpio, time
+
+CHIP  = 0            # /dev/gpiochip0
+LINE  = 23
+h = lgpio.gpiochip_open(CHIP)
+lgpio.gpio_claim_output(h, LINE, 0)
+
+try:
+    while True:
+        lgpio.gpio_write(h, LINE, 1)
+        time.sleep(0.0001)    # 100 us pulse
+        lgpio.gpio_write(h, LINE, 0)
+        time.sleep(0.02)      # 50 Hz
+finally:
+    lgpio.gpiochip_close(h)
+```
+
+For deterministic microsecond pulses on the Pi, prefer a dedicated
+microcontroller or a hardware PWM channel — Linux user-space cannot
+guarantee 15 µs pulse accuracy under load.
+
+### 3.4 NVIDIA Jetson (Orin Nano / Nano)
+
+Same 3.3 V GPIO model as the Pi, driven via `libgpiod` / `lgpio`.
+
+```python
+import gpiod, time
+
+with gpiod.request_lines(
+    "/dev/gpiochip0",
+    consumer="u3v-trigger",
+    config={ 17: gpiod.LineSettings(direction=gpiod.line.Direction.OUTPUT) }
+) as request:
+    while True:
+        request.set_value(17, gpiod.line.Value.ACTIVE)
+        time.sleep(0.0001)
+        request.set_value(17, gpiod.line.Value.INACTIVE)
+        time.sleep(0.02)
+```
+
+Map the GPIO number to your carrier board's pinout (Jetson Orin Nano
+40-pin header: e.g. pin 12 = GPIO 194 for the recommended trigger line;
+consult your carrier's pinout table).
+
+### 3.5 STM32 (HAL, generic)
+
+```c
+#define TRIG_PORT  GPIOA
+#define TRIG_PIN   GPIO_PIN_5     /* PA5 push-pull output */
+
+static void delay_us(uint32_t us) {
+    /* Use DWT cycle counter or a calibrated NOP loop */
+    uint32_t start = DWT->CYCCNT;
+    uint32_t ticks = us * (SystemCoreClock / 1000000U);
+    while (DWT->CYCCNT - start < ticks) { __NOP(); }
+}
+
+void trigger_once(void) {
+    HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);
+    delay_us(50);
+    HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
 }
 ```
 
+For hard-real-time trigger streams, drive the pin from a TIM channel
+in PWM one-pulse mode.
+
+### 3.6 TTL function generator
+
+Configure the generator for a **pulse** waveform (not sine):
+- Amplitude: 3.3 V or 5 V (both work)
+- High-level width: >= 50 µs
+- Frequency: within the sensor's max frame rate for the current ROI
+- Output impedance: 50 Ω (typical); no external termination needed
+
+### 3.7 PLC / 24 V industrial output
+
+Wire the PLC output (`+24 V` HIGH) to `Trig+` through a **1 kΩ series
+resistor** (see §3.2). Common the PLC 0 V to `Trig-`. Typical PLC scan
+cycles produce 1–10 ms pulses — well above tH.
+
 ---
 
-## 5. Camera Configuration (SDK Side)
+## 4. Camera Configuration (SDK Side)
 
 All TriggerXxx settings must be applied **before** `u3v_camera_start()`
-/ `cam.start()`.
+/ `cam.start()`. This is host-agnostic — identical for every trigger
+source above.
 
-### 5.1 C
+### 4.1 C
 ```c
 #include <u3v/u3v_sdk.h>
 
@@ -165,7 +306,7 @@ while (running) {
 }
 ```
 
-### 5.2 Python
+### 4.2 Python
 ```python
 import u3v_cam
 
@@ -182,7 +323,7 @@ with u3v_cam.Camera() as cam:
     cam.start()
     try:
         while True:
-            frame = cam.read_frame()   # blocks until next Arduino pulse
+            frame = cam.read_frame()   # blocks until next external pulse
     finally:
         cam.stop()
         cam.configure_trigger(on=False)   # restore continuous mode
@@ -190,9 +331,9 @@ with u3v_cam.Camera() as cam:
 
 ---
 
-## 6. Software Trigger Alternative
+## 5. Software Trigger Alternative
 
-If a Trig+ signal source is not available, the same acquisition model
+If no external trigger source is available, the same acquisition model
 is reachable through software trigger:
 
 ```python
@@ -208,23 +349,25 @@ Full example: `python/examples/trigger_mode.py`.
 
 ---
 
-## 7. Troubleshooting
+## 6. Troubleshooting
 
 | Symptom | Check |
 |---|---|
-| No frame on any trigger | `TriggerMode` was set to On **before** `start()`; `TriggerActivation` matches signal edge |
+| No frame on any trigger | `TriggerMode` was set to On **before** `start()`; `TriggerActivation` matches signal edge; `Trig-` shares ground with source |
+| Pi / Jetson: no frame despite valid signal on scope | Confirm chip / line numbers (`gpiochip0` vs `gpiochip4`); some carriers use non-default chips |
 | Occasional missed frames | Increase pulse width (try 100 us); slow the trigger rate so T >= Exposure + Readout |
 | `read_frame()` timeout | Trigger period too short, exposure too long, or wiring disconnected |
 | Continuous mode broken after trigger session | Call `configure_trigger(on=False)`, then `stop()` + `start()` again |
 | Unstable trigger over long cables | Twisted pair, shielded cable, keep length <= 3 m |
+| 24 V PLC: opto not activating | Verify series resistor value; confirm PLC 0 V is tied to `Trig-` |
 
 ---
 
-## 8. See Also
+## 7. See Also
 
-- U3V-CAM-IMX296 User Manual, Chapter 3 — Trigger & Strobe timing
-  (source of truth)
-- U3V-CAM-IMX296 User Manual, Chapter 4.4 — Trigger IN circuit diagrams
+- Camera User Manual, Chapter 3 — Trigger & Strobe timing (source of
+  truth for the sensor-specific values in §1)
+- Camera User Manual, Chapter 4.4 — Trigger IN circuit diagrams
 - SDK `python/examples/trigger_mode.py` — software trigger example
 - SDK `examples/multi_frame_capture.c` — MultiFrame acquisition example
 - `RELEASE_NOTES.md` — supported features per platform
