@@ -5,7 +5,7 @@
 
 This document is applicable to any U3V-compliant camera in the
 InnoMaker U3V SDK family. Wiring, host code, and SDK trigger
-configuration are identical across sensors. Only the four
+configuration are identical across sensors. Only the
 **sensor-specific reference values** in §1 change per product; look
 them up in the corresponding camera's User Manual, Chapter 3.
 
@@ -21,34 +21,25 @@ and **Chapter 4.4** (Trigger IN Circuit Diagrams).
 
 ## 1. Sensor-Specific Reference Values
 
-The following four values change per camera model. Values below apply
+The following values change per camera model. Values below apply
 to **U3V-CAM-IMX296**. When integrating another camera in the family
 (e.g. IMX585, IMX9281), replace them with the numbers from that
 camera's User Manual, Chapter 3.
 
 | Parameter | U3V-CAM-IMX296 | Manual reference |
 |---|---|---|
-| Min. trigger pulse width (tH) | **14.815 µs** | Ch. 3.1 |
 | Full-ROI resolution | 1456 x 1088 | Ch. 1.2 |
 | Max frame rate @ full ROI (MONO8) | 60 fps | Ch. 1.2 |
 | Frame readout time @ full ROI | ~16.7 ms | Derived from max fps |
 
-### 1.1 Minimum trigger pulse width
+### 1.1 Trigger signal characteristics
 
-The hardware trigger input requires:
+Per the camera User Manual, Chapter 3:
 
-> **Pulse width >= tH**
-
-Pulses shorter than tH are not guaranteed to be recognized.
-
-Recommended pulse widths (host-agnostic):
-
-| Priority | Pulse width | When to use |
-|---|---|---|
-| Minimum | tH + margin (e.g. 15 µs for IMX296) | At spec, no margin |
-| Recommended | 50 µs | Comfortable margin, tolerant of wiring jitter |
-| Conservative | 100 µs | Long cables or noisy environments |
-| Slow sources | 1 ms+ | Shell scripts, PLC scan cycles |
+- **Edge**: the camera module is triggered by the **rising or falling
+  edge** of the signal input. Both polarities are supported; select the
+  one that matches your source using `TriggerActivation`.
+- **Recommended pulse width**: **1 ms or above**.
 
 ### 1.2 Trigger period limits
 
@@ -120,8 +111,8 @@ value.
 
 Single pulse:
 ```cpp
-const int  TRIG_PIN = 8;
-const long PULSE_US = 50;   // >= 15 us required, 50 us recommended
+const int TRIG_PIN  = 8;
+const int PULSE_MS  = 1;    // recommended: 1 ms or above
 
 void setup() {
     pinMode(TRIG_PIN, OUTPUT);
@@ -130,35 +121,35 @@ void setup() {
 
 void triggerOnce() {
     digitalWrite(TRIG_PIN, HIGH);
-    delayMicroseconds(PULSE_US);
+    delay(PULSE_MS);
     digitalWrite(TRIG_PIN, LOW);
 }
 
 void loop() {
     triggerOnce();
-    delay(100);              // 10 Hz
+    delay(100);             // 10 Hz
 }
 ```
 
 Fixed-rate (drift-free scheduling):
 ```cpp
 const int  TRIG_PIN  = 8;
-const long PULSE_US  = 50;
+const int  PULSE_MS  = 1;    // recommended: 1 ms or above
 const long PERIOD_MS = 20;   // 50 Hz
 
-unsigned long next_us = 0;
+unsigned long next_ms = 0;
 
 void setup() {
     pinMode(TRIG_PIN, OUTPUT);
-    next_us = micros();
+    next_ms = millis();
 }
 
 void loop() {
-    if ((long)(micros() - next_us) >= 0) {
+    if ((long)(millis() - next_ms) >= 0) {
         digitalWrite(TRIG_PIN, HIGH);
-        delayMicroseconds(PULSE_US);
+        delay(PULSE_MS);
         digitalWrite(TRIG_PIN, LOW);
-        next_us += PERIOD_MS * 1000UL;
+        next_ms += PERIOD_MS;
     }
 }
 ```
@@ -170,7 +161,7 @@ Adjust `--chip` accordingly.
 
 ```bash
 #!/usr/bin/env bash
-# 1 Hz trigger from GPIO23, ~2 ms pulse width.
+# 1 Hz trigger from GPIO23, ~2 ms pulse width (>= 1 ms recommended).
 CHIP=gpiochip0
 LINE=23
 while true; do
@@ -180,9 +171,6 @@ while true; do
     sleep 1.0
 done
 ```
-
-For sub-millisecond pulses, use the C or Python interface below —
-`gpioset` + `sleep` cannot reach 15 µs reliably.
 
 ### 3.3 Raspberry Pi — Python (`lgpio`)
 
@@ -197,16 +185,12 @@ lgpio.gpio_claim_output(h, LINE, 0)
 try:
     while True:
         lgpio.gpio_write(h, LINE, 1)
-        time.sleep(0.0001)    # 100 us pulse
+        time.sleep(0.001)     # 1 ms pulse (recommended: >= 1 ms)
         lgpio.gpio_write(h, LINE, 0)
         time.sleep(0.02)      # 50 Hz
 finally:
     lgpio.gpiochip_close(h)
 ```
-
-For deterministic microsecond pulses on the Pi, prefer a dedicated
-microcontroller or a hardware PWM channel — Linux user-space cannot
-guarantee 15 µs pulse accuracy under load.
 
 ### 3.4 NVIDIA Jetson (Orin Nano / Nano)
 
@@ -222,7 +206,7 @@ with gpiod.request_lines(
 ) as request:
     while True:
         request.set_value(17, gpiod.line.Value.ACTIVE)
-        time.sleep(0.0001)
+        time.sleep(0.001)     # 1 ms pulse (recommended: >= 1 ms)
         request.set_value(17, gpiod.line.Value.INACTIVE)
         time.sleep(0.02)
 ```
@@ -237,16 +221,9 @@ consult your carrier's pinout table).
 #define TRIG_PORT  GPIOA
 #define TRIG_PIN   GPIO_PIN_5     /* PA5 push-pull output */
 
-static void delay_us(uint32_t us) {
-    /* Use DWT cycle counter or a calibrated NOP loop */
-    uint32_t start = DWT->CYCCNT;
-    uint32_t ticks = us * (SystemCoreClock / 1000000U);
-    while (DWT->CYCCNT - start < ticks) { __NOP(); }
-}
-
 void trigger_once(void) {
     HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_SET);
-    delay_us(50);
+    HAL_Delay(1);                 /* 1 ms pulse (recommended: >= 1 ms) */
     HAL_GPIO_WritePin(TRIG_PORT, TRIG_PIN, GPIO_PIN_RESET);
 }
 ```
@@ -258,15 +235,15 @@ in PWM one-pulse mode.
 
 Configure the generator for a **pulse** waveform (not sine):
 - Amplitude: 3.3 V or 5 V (both work)
-- High-level width: >= 50 µs
+- High-level width: >= 1 ms (recommended)
 - Frequency: within the sensor's max frame rate for the current ROI
 - Output impedance: 50 Ω (typical); no external termination needed
 
 ### 3.7 PLC / 24 V industrial output
 
 Wire the PLC output (`+24 V` HIGH) to `Trig+` through a **1 kΩ series
-resistor** (see §3.2). Common the PLC 0 V to `Trig-`. Typical PLC scan
-cycles produce 1–10 ms pulses — well above tH.
+resistor** (see §2.2). Common the PLC 0 V to `Trig-`. Typical PLC scan
+cycles produce 1–10 ms pulses, which meets the >= 1 ms recommendation.
 
 ---
 
@@ -355,7 +332,7 @@ Full example: `python/examples/trigger_mode.py`.
 |---|---|
 | No frame on any trigger | `TriggerMode` was set to On **before** `start()`; `TriggerActivation` matches signal edge; `Trig-` shares ground with source |
 | Pi / Jetson: no frame despite valid signal on scope | Confirm chip / line numbers (`gpiochip0` vs `gpiochip4`); some carriers use non-default chips |
-| Occasional missed frames | Increase pulse width (try 100 us); slow the trigger rate so T >= Exposure + Readout |
+| Occasional missed frames | Ensure pulse width >= 1 ms; slow the trigger rate so T >= Exposure + Readout |
 | `read_frame()` timeout | Trigger period too short, exposure too long, or wiring disconnected |
 | Continuous mode broken after trigger session | Call `configure_trigger(on=False)`, then `stop()` + `start()` again |
 | Unstable trigger over long cables | Twisted pair, shielded cable, keep length <= 3 m |
