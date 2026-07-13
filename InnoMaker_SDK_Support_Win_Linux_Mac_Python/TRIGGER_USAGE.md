@@ -1,6 +1,6 @@
 # U3V Camera SDK — External Trigger Usage Guide
 
-**Version:** 2.2.2
+**Version:** 2.2.3
 **Camera in this package:** U3V-CAM-IMX296
 
 This document is applicable to any U3V-compliant camera in the

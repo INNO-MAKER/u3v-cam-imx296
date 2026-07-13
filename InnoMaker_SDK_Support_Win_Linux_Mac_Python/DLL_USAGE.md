@@ -1,6 +1,6 @@
 # U3V Camera SDK — Library Usage Guide
 
-**Version:** 2.2.2
+**Version:** 2.2.3
 
 This guide covers how to integrate and deploy the U3V Camera library
 (`u3v_cam.dll` / `libu3v_cam.so` / `libu3v_cam.dylib`) in your own
@@ -13,12 +13,12 @@ application. If you only need the Python interface, jump to
 
 | Package | Library file | Import library / header |
 |---|---|---|
-| `u3v-sdk-2.2.2-windows-x64.zip` | `bin/u3v_cam.dll` (+ `bin/libusb-1.0.dll`) | `lib/u3v_cam.lib`, `include/u3v/*.h` |
-| `u3v-sdk-2.2.2-linux-x64.tar.gz` | `lib/libu3v_cam.so.2.2.2` (+ SONAME symlinks) | `include/u3v/*.h` |
-| `u3v-sdk-2.2.2-linux-arm64.tar.gz` | Same layout as x64 | Same |
-| `u3v-sdk-2.2.2-macos-arm64.zip` | `lib/libu3v_cam.2.2.2.dylib` (+ symlinks) | `include/u3v/*.h` |
-| `u3v-sdk-2.2.2-macos-x64.zip` | Same layout as arm64 | Same |
-| `u3v-sdk-2.2.2-python.zip` | Native libraries for all five platforms bundled inside | Not required — Python wraps them |
+| `u3v-sdk-2.2.3-windows-x64.zip` | `bin/u3v_cam.dll` (+ `bin/libusb-1.0.dll`) | `lib/u3v_cam.lib`, `include/u3v/*.h` |
+| `u3v-sdk-2.2.3-linux-x64.tar.gz` | `lib/libu3v_cam.so.2.2.3` (+ SONAME symlinks) | `include/u3v/*.h` |
+| `u3v-sdk-2.2.3-linux-arm64.tar.gz` | Same layout as x64 | Same |
+| `u3v-sdk-2.2.3-macos-arm64.zip` | `lib/libu3v_cam.2.2.3.dylib` (+ symlinks) | `include/u3v/*.h` |
+| `u3v-sdk-2.2.3-macos-x64.zip` | Same layout as arm64 | Same |
+| `u3v-sdk-2.2.3-python.zip` | Native libraries for all five platforms bundled inside | Not required — Python wraps them |
 
 Optional ISP color plugins for demosaic / white-balance / gamma / CCM
 ship under `bin/plugins/` (Windows) or `lib/plugins/` (Linux/macOS).
@@ -102,8 +102,8 @@ plugins/            (optional, only if you use the ISP plugins)
 ### Linux (x64 or ARM64)
 Install to your app's rpath or a system location such as `/usr/local/lib/`:
 ```
-libu3v_cam.so.2.2.2
-libu3v_cam.so.2          (symlink to libu3v_cam.so.2.2.2)
+libu3v_cam.so.2.2.3
+libu3v_cam.so.2          (symlink to libu3v_cam.so.2.2.3)
 plugins/                 (optional)
 ```
 Run `sudo ldconfig` after installing to `/usr/local/lib/`.
@@ -113,7 +113,7 @@ libusb-1.0 must be provided by the distro (`libusb-1.0-0`).
 Copy inside your `.app` bundle's `Contents/Frameworks/` or install to
 `/usr/local/lib/`:
 ```
-libu3v_cam.2.2.2.dylib
+libu3v_cam.2.2.3.dylib
 libu3v_cam.2.dylib       (symlink)
 libu3v_cam.dylib         (symlink)
 plugins/                 (optional)
@@ -147,7 +147,7 @@ The Python package bundles the native library for every supported
 platform. No separate C library install is required.
 
 ```bash
-pip install u3v-sdk-2.2.2-python.zip
+pip install u3v-sdk-2.2.3-python.zip
 ```
 
 ```python
@@ -184,7 +184,7 @@ pip install "u3v_cam[viewer]"    # PyQt6 + pyqtgraph
 The library preserves ABI within the 2.x line — SONAME
 `libu3v_cam.so.2` (Linux) / current version `2` (macOS) does not change
 across minor releases. Application code linked against 2.1.x or 2.2.x
-runs against 2.2.2 without recompile; drop the new library file in
+runs against 2.2.3 without recompile; drop the new library file in
 place of the old one.
 
 ---
@@ -193,7 +193,10 @@ place of the old one.
 
 - `RELEASE_NOTES.md` — current version's new features, fixes, and
   supported platforms.
+- `WHATS_NEW.md` — summary of improvements across versions.
 - `DELIVERY_OVERVIEW.md` — full package inventory and per-platform
   installation walkthrough.
+- `TRIGGER_USAGE.md` — external hardware trigger guide (pulse width,
+  wiring, Arduino UNO code, SDK trigger configuration).
 - Each package's `docs/` — inline release notes matching the package
   version.
