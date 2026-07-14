@@ -1,6 +1,6 @@
 # U3V Camera SDK — External Trigger Usage Guide
 
-**Version:** 2.2.3
+**Version:** 2.2.5
 **Camera in this package:** U3V-CAM-IMX296
 
 This document is applicable to any U3V-compliant camera in the
@@ -261,11 +261,15 @@ u3v_camera_open(&cam, 0);
 u3v_camera_set_pixel_format(cam, PFNC_MONO8);
 u3v_camera_set_exposure(cam, 5000);   /* 5 ms */
 
-/* GenICam enum values as documented in User Manual, Chapter 3 */
-u3v_camera_set_trigger_selector  (cam, 2);  /* FrameStart       */
-u3v_camera_set_trigger_source    (cam, 1);  /* Line1 (hardware) */
-u3v_camera_set_trigger_activation(cam, 3);  /* RisingEdge       */
+/* Named constants from <u3v/u3v_types.h> */
+u3v_camera_set_trigger_selector  (cam, U3V_TRIGGER_SELECTOR_FRAME_START);
+u3v_camera_set_trigger_source    (cam, U3V_TRIGGER_SOURCE_LINE1);       /* hardware */
+u3v_camera_set_trigger_activation(cam, U3V_TRIGGER_ACTIVATION_RISING_EDGE);
 u3v_camera_set_trigger_mode      (cam, U3V_TRIGGER_MODE_ON);
+
+/* Read any of these back if needed, e.g.: */
+uint32_t activation;
+u3v_camera_get_trigger_activation(cam, &activation);
 
 u3v_stream_config_t cfg = { .num_buffers = 4, .timeout_ms = 5000 };
 u3v_stream_create(&stream, cam, &cfg);

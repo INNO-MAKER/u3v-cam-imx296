@@ -6,6 +6,21 @@ version's full feature list, see `RELEASE_NOTES.md`.
 
 ---
 
+## 2.2.5
+
+- **Read back trigger and exposure settings.** Your application can now
+  query the values it configured — exposure-auto, trigger activation,
+  line debounce, and strobe timing — directly from the camera, in both
+  C and Python.
+- **Readable names for trigger configuration.** Trigger activation,
+  source, and selector can be set using descriptive named constants
+  instead of numeric values, making trigger setup code clearer and less
+  error-prone.
+- **Faster, more stable color processing.** The color ISP RGB filter uses
+  much less CPU, improving color live-view stability on ARM hosts. For
+  smooth full-resolution color ISP, a Jetson Orin Nano or x86_64 host is
+  recommended (see the delivery guide for host recommendations).
+
 ## 2.2.3
 
 - **Lower CPU usage in live view on Linux.** Real-time preview in the
