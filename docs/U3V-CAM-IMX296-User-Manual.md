@@ -100,7 +100,7 @@ Equipped with a true global shutter sensor and full GenICam trigger control, it 
 | Parameter | Value |
 |-----------|-------|
 | Weight | ≤ 45 g |
-| Lens Mount | M12 Lens YT10068-2mp / C-Mount (CS-Mount adapter only) |
+| Lens Mount | M12 Lens YT10115-5MP+IR0623 (No IR Filter) / C-Mount (CS-Mount adapter only) |
 | Operating Temperature | –10 °C to +65 °C |
 | Storage Temperature | –30 °C to +80 °C |
 | Humidity | 20–80% RH (non-condensing) |
@@ -178,13 +178,11 @@ TBD
 
 #### 4.2.1 M12 Lens (Default)
 
-![M12 Lens Holder](./images/img-007.png)
+**M12 Lens Part Number:** YT10115-5MP+IR0623 (Part No. 01.10115.003.05)
 
-**M12 Lens Part Number:** YT10068-2mp 6MM, No IR Filter
+> **Note:** The datasheet lists an IR-FILTER specification section. The actual product shipped with this camera does **not** include an IR Filter.
 
-**M12 Lens Datasheet:**
-
-![M12 Lens Datasheet](./images/img-008.png)
+**M12 Lens Datasheet:** [YT10115-5MP+IR0623-V01.pdf](./YT10115-5MP+IR0623-V01.pdf)
 
 #### 4.2.2 CS Lens (Optional)
 
