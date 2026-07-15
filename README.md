@@ -51,7 +51,7 @@ The camera is 100% compliant with **USB3 Vision v1.0** and **GenICam 3.x** stand
 | 5 | STROBE - / Trig - | Opto-isolated I/O Ground |
 | 6 | GND | System Ground |
 
-For detailed hardware dimensions, connector parameters, and wiring diagrams, refer to the [U3V-CAM-IMX296 User Manual V1.1.pdf](./U3V-CAM-IMX296%20User%20Manual%20V1.1.pdf).
+For detailed hardware dimensions, connector parameters, and wiring diagrams, refer to the [U3V-CAM-IMX296 User Manual V1.2.pdf](./U3V-CAM-IMX296%20User%20Manual%20V1.2.pdf).
 
 ---
 
@@ -158,7 +158,7 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 | [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBUS Player download links |
 | [`PreInstalled-IMG-PI5/`](./PreInstalled-IMG-PI5/) | Download link for pre-configured Raspberry Pi 5 OS image |
 | [`images/`](./images/) | Product images |
-| [`U3V-CAM-IMX296 User Manual V1.1.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.1.pdf) | Complete hardware and software documentation |
+| [`U3V-CAM-IMX296 User Manual V1.2.pdf`](./U3V-CAM-IMX296%20User%20Manual%20V1.2.pdf) | Complete hardware and software documentation |
 
 ---
 
