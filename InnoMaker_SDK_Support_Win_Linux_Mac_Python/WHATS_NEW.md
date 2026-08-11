@@ -6,6 +6,16 @@ version's full feature list, see `RELEASE_NOTES.md`.
 
 ---
 
+## 2.2.6
+
+- **More reliable frame capture, especially with triggering and multiple
+  cameras.** The library now reports incomplete frames so your application can
+  skip them and work only with complete images. Image streaming is more robust
+  under heavy load and in hardware-trigger mode.
+- **Color capture from the Python interface.** Enable color with
+  `cam.enable_color()`, and `read_frame()` returns a demosaiced `(H, W, 3)`
+  RGB image — the same color output as the viewer.
+
 ## 2.2.5
 
 - **Read back trigger and exposure settings.** Your application can now
