@@ -23,7 +23,7 @@ target platform.
 | `u3v-sdk-2.2.6-linux-arm64.tar.gz`| Pi 5 / Jetson Orin Nano | 150 KB | ARM64 counterpart of the Linux x64 package |
 | `u3v-sdk-2.2.6-macos-arm64.zip`   | Apple Silicon (M1–M4) | 55 MB | C/C++ SDK + `u3v_viewer.app` |
 | `u3v-sdk-2.2.6-macos-x64.zip`     | Intel Mac | 55 MB | Intel counterpart of the macOS arm64 package |
-| `u3v-sdk-2.2.6-python.zip`        | All five OS/arch above | 1.1 MB | Python 3.8+ package; bundles native libraries for every platform in one archive |
+| `u3v-sdk-2.2.6.1-python.zip`      | All five OS/arch above | 1.1 MB | Python 3.8+ package; bundles native libraries for every platform in one archive |
 
 All packages share the same underlying SDK. Code written against the C
 API on Windows compiles and runs unchanged on Linux and macOS. Python
@@ -275,7 +275,7 @@ pattern.
 
 ---
 
-## 6. Python Package (`u3v-sdk-2.2.6-python.zip`)
+## 6. Python Package (`u3v-sdk-2.2.6.1-python.zip`)
 
 ### 6.1 Target Audience
 
@@ -291,7 +291,7 @@ matching binary at import time.
 ### 6.2 Folder Layout
 
 ```
-u3v-sdk-2.2.6-python/
+u3v-sdk-2.2.6.1-python/
 ├── README.md                       Detailed Python usage guide
 ├── pyproject.toml                  PEP 517 metadata (`pip install .` works)
 ├── install_deps.bat / .sh          One-click dependency installer
@@ -321,7 +321,7 @@ u3v-sdk-2.2.6-python/
 
 **Windows:**
 ```bat
-:: 1. Extract u3v-sdk-2.2.6-python.zip
+:: 1. Extract u3v-sdk-2.2.6.1-python.zip
 :: 2. Plug in the U3V camera (install WinUSB driver if needed)
 :: 3. Open a command prompt in the extracted folder
 install_deps.bat
@@ -331,8 +331,8 @@ run_viewer.bat
 
 **Linux / macOS:**
 ```bash
-unzip u3v-sdk-2.2.6-python.zip
-cd u3v-sdk-2.2.6-python
+unzip u3v-sdk-2.2.6.1-python.zip
+cd u3v-sdk-2.2.6.1-python
 chmod +x *.sh
 ./install_deps.sh
 ./run_basic_capture.sh
@@ -580,7 +580,7 @@ _raw.camera_set_exposure(cam._handle, 5000)
      `u3v-sdk-2.2.6-linux-<arch>.tar.gz` and/or
      `u3v-sdk-2.2.6-macos-<arch>.zip`
    - Python / ML / CV teams, headless capture, scripting →
-     `u3v-sdk-2.2.6-python.zip` (single file covers all five platforms)
+     `u3v-sdk-2.2.6.1-python.zip` (single file covers all five platforms)
    - Color-camera users on any platform → the same package as above
      plus the ISP plugins in `bin/plugins/`
    - Packages are **non-exclusive** — same underlying library, different

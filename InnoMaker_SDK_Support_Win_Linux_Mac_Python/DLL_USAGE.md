@@ -18,7 +18,7 @@ application. If you only need the Python interface, jump to
 | `u3v-sdk-2.2.6-linux-arm64.tar.gz` | Same layout as x64 | Same |
 | `u3v-sdk-2.2.6-macos-arm64.zip` | `lib/libu3v_cam.2.2.6.dylib` (+ symlinks) | `include/u3v/*.h` |
 | `u3v-sdk-2.2.6-macos-x64.zip` | Same layout as arm64 | Same |
-| `u3v-sdk-2.2.6-python.zip` | Native libraries for all five platforms bundled inside | Not required — Python wraps them |
+| `u3v-sdk-2.2.6.1-python.zip` | Native libraries for all five platforms bundled inside | Not required — Python wraps them |
 
 Optional ISP color plugins for demosaic / white-balance / gamma / CCM
 ship under `bin/plugins/` (Windows) or `lib/plugins/` (Linux/macOS).
@@ -147,7 +147,7 @@ The Python package bundles the native library for every supported
 platform. No separate C library install is required.
 
 ```bash
-pip install u3v-sdk-2.2.6-python.zip
+pip install u3v-sdk-2.2.6.1-python.zip
 ```
 
 ```python

@@ -51,7 +51,7 @@ state. See the Python package README for details.
 - C/C++: replace `libu3v_cam.so.2.2.5` with `libu3v_cam.so.2.2.6`
   (SONAME `libu3v_cam.so.2` unchanged). On Windows, replace `u3v_cam.dll`.
   On macOS, replace `libu3v_cam.dylib`.
-- Python: replace the `u3v-sdk-2.2.6-python.zip` package.
+- Python: replace the `u3v-sdk-2.2.6.1-python.zip` package.
 
 All existing 2.1.x / 2.2.x application code continues to work unchanged. Code
 that checks grab results for `U3V_OK` treats an incomplete frame as a non-OK
@@ -71,7 +71,7 @@ SDK headers together with the library (C/C++), or use the new Python package.
 | Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.2.6-linux-arm64.tar.gz` |
 | macOS 11+ | Apple Silicon | `u3v-sdk-2.2.6-macos-arm64.zip` |
 | macOS 11+ | Intel x64 | `u3v-sdk-2.2.6-macos-x64.zip` |
-| Python 3.8+ | Any of the above | `u3v-sdk-2.2.6-python.zip` |
+| Python 3.8+ | Any of the above | `u3v-sdk-2.2.6.1-python.zip` |
 
 For installation and usage instructions, see the package README or contact
 the SDK provider. For a summary of improvements across earlier versions, see

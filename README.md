@@ -74,7 +74,7 @@ For full installation instructions, package contents, API reference, and code ex
 | [`u3v-sdk-2.2.6-linux-arm64.tar.gz`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-linux-arm64.tar.gz) | Pi 5 / Jetson Orin Nano | ARM64 counterpart of the Linux x64 package |
 | [`u3v-sdk-2.2.6-macos-arm64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-macos-arm64.zip) | Apple Silicon (M1–M4) | C/C++ SDK + `u3v_viewer.app` |
 | [`u3v-sdk-2.2.6-macos-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-macos-x64.zip) | Intel Mac | Intel counterpart of the macOS arm64 package |
-| [`u3v-sdk-2.2.6-python.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-python.zip) | All platforms | Python 3.8+ package; bundles native libraries for every platform |
+| [`u3v-sdk-2.2.6.1-python.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6.1-python.zip) | All platforms | Python 3.8+ package; bundles native libraries for every platform |
 
 ### Supported Platforms
 
