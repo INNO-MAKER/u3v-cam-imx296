@@ -6,6 +6,17 @@ version's full feature list, see `RELEASE_NOTES.md`.
 
 ---
 
+## 2.3.0
+
+- **Query the SDK version at runtime.** `u3v_get_version()` in C and
+  `u3v_cam.sdk_version()` in Python return the library's version string, so
+  your application and logs can record exactly which SDK build is in use.
+- **White balance from the Python interface.** After `cam.enable_color()`,
+  call `cam.auto_white_balance()` for a one-shot automatic white balance, or
+  `cam.set_white_balance(red, green, blue)` for fixed per-channel gains.
+- **The library reports its version and vendor in its file properties**
+  (visible, for example, in the Windows DLL "Details" tab).
+
 ## 2.2.6
 
 - **More reliable frame capture, especially with triggering and multiple

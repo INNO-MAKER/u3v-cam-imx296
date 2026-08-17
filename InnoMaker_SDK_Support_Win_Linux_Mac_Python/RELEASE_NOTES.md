@@ -1,64 +1,67 @@
 # U3V Camera SDK — Release Notes
 
-**Version:** 2.2.6
-**Date:** 2026-08-11
-**Type:** Maintenance release (ABI-compatible)
+**Version:** 2.3.0
+**Date:** 2026-08-15
+**Type:** Feature release (ABI-compatible)
 
 ---
 
 ## What's New
 
-### Reliable frame handling
+### Query the SDK version at runtime
 
-The SDK now signals incomplete frames with a distinct status,
-`U3V_ERR_INCOMPLETE`, returned by `u3v_stream_grab` / `u3v_stream_grab_view`
-when a frame did not arrive in full. Your application can check for it and
-skip partial frames, keeping only complete images:
+The SDK now reports its own version and vendor through a single call, so your
+application and logs can record exactly which build is in use.
 
 ```c
-u3v_status_t st = u3v_stream_grab(stream, &buf);
-if (st == U3V_OK) {
-    /* complete frame — use buf */
-} else if (st == U3V_ERR_INCOMPLETE) {
-    /* partial frame — skip it */
-}
+#include <u3v/u3v_sdk.h>
+
+printf("SDK: %s\n", u3v_get_version());
+/* e.g. "innomaker U3V Camera SDK 2.3.0" */
 ```
 
-This is especially useful under heavy throughput, in hardware-trigger mode,
-and in multi-camera setups. In Python, `read_frame()` raises
-`U3VIncompleteFrame` (a subclass of `U3VError`), and iterating a camera
-(`for frame in cam`) skips incomplete frames automatically.
+In Python:
 
-### Color capture from the Python interface
+```python
+import u3v_cam
+print(u3v_cam.sdk_version())   # native library, e.g. "innomaker U3V Camera SDK 2.3.0"
+print(u3v_cam.__version__)     # Python wrapper version
+```
 
-The Python interface can return demosaiced color images directly. Enable the
-color pipeline and `read_frame()` returns an `(H, W, 3)` RGB array — the same
-color output as the viewer:
+On Windows the library also carries its version and vendor in the DLL file
+properties (right-click `u3v_cam.dll` → Properties → Details).
+
+### White balance from the Python interface
+
+With the color pipeline enabled, you can apply white balance directly from
+Python — a one-shot automatic balance, or fixed per-channel gains:
 
 ```python
 cam.pixel_format = u3v_cam.PFNC_BAYERRG8
 cam.enable_color()
-rgb = cam.read_frame()      # (H, W, 3) uint8 RGB
+cam.start()
+
+cam.auto_white_balance()               # one-shot gray-world white balance
+# or set fixed gains:  cam.set_white_balance(1.6, 1.0, 1.9)
+
+rgb = cam.read_frame()                 # white-balanced (H, W, 3) RGB
 ```
 
-`disable_color()` reverts to raw capture; `color_enabled` reports the current
-state. See the Python package README for details.
+`cam.get_white_balance()` returns the current red/green/blue gains. See the
+Python package README for the full color workflow.
 
 ## Compatibility
 
 **Drop-in binary replacement — no relink required for existing code.**
 
-- C/C++: replace `libu3v_cam.so.2.2.5` with `libu3v_cam.so.2.2.6`
+- C/C++: replace `libu3v_cam.so.2.2.x` with `libu3v_cam.so.2.3.0`
   (SONAME `libu3v_cam.so.2` unchanged). On Windows, replace `u3v_cam.dll`.
   On macOS, replace `libu3v_cam.dylib`.
-- Python: replace the `u3v-sdk-2.2.6.1-python.zip` package.
+- Python: replace the `u3v-sdk-2.3.0-python.zip` package.
 
-All existing 2.1.x / 2.2.x application code continues to work unchanged. Code
-that checks grab results for `U3V_OK` treats an incomplete frame as a non-OK
-result and can simply skip it.
-
-**To use the new status constant or the Python color methods**, update the
-SDK headers together with the library (C/C++), or use the new Python package.
+All existing 2.1.x / 2.2.x application code continues to work unchanged.
+**To use the new `u3v_get_version()` call**, update the SDK headers together
+with the library (C/C++), or use the new Python package.
 
 ---
 
@@ -66,12 +69,12 @@ SDK headers together with the library (C/C++), or use the new Python package.
 
 | OS | Architecture | Package |
 |---|---|---|
-| Windows 10 / 11 | x64 | `u3v-sdk-2.2.6-windows-x64.zip` |
-| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.2.6-linux-x64.tar.gz` |
-| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.2.6-linux-arm64.tar.gz` |
-| macOS 11+ | Apple Silicon | `u3v-sdk-2.2.6-macos-arm64.zip` |
-| macOS 11+ | Intel x64 | `u3v-sdk-2.2.6-macos-x64.zip` |
-| Python 3.8+ | Any of the above | `u3v-sdk-2.2.6.1-python.zip` |
+| Windows 10 / 11 | x64 | `u3v-sdk-2.3.0-windows-x64.zip` |
+| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.3.0-linux-x64.tar.gz` |
+| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.3.0-linux-arm64.tar.gz` |
+| macOS 11+ | Apple Silicon | `u3v-sdk-2.3.0-macos-arm64.zip` |
+| macOS 11+ | Intel x64 | `u3v-sdk-2.3.0-macos-x64.zip` |
+| Python 3.8+ | Any of the above | `u3v-sdk-2.3.0-python.zip` |
 
 For installation and usage instructions, see the package README or contact
 the SDK provider. For a summary of improvements across earlier versions, see

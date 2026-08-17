@@ -57,9 +57,9 @@ For detailed hardware dimensions, connector parameters, and wiring diagrams, ref
 
 ## 2. InnoMaker SDK
 
-The **InnoMaker U3V SDK** (version 2.2.6) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library.
+The **InnoMaker U3V SDK** (version 2.3.0) is the recommended choice for developers who need direct, low-level camera access and maximum performance. It provides a lightweight, cross-platform C/C++ API and a Python binding, all built on the same underlying shared library.
 
-**SDK version**: 2.2.6 — **Last updated**: 2026-08-11
+**SDK version**: 2.3.0 — **Last updated**: 2026-08-15
 
 For full installation instructions, package contents, API reference, and code examples, see:
 
@@ -69,12 +69,19 @@ For full installation instructions, package contents, API reference, and code ex
 
 | Package | Platform | Description |
 | :--- | :--- | :--- |
-| [`u3v-sdk-2.2.6-windows-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-windows-x64.zip) | Windows 10/11 x64 | C/C++ SDK + Qt6 viewer, fully self-contained |
-| [`u3v-sdk-2.2.6-linux-x64.tar.gz`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-linux-x64.tar.gz) | Ubuntu 22.04+ x64 | C/C++ SDK + viewer (system Qt6 + libusb) |
-| [`u3v-sdk-2.2.6-linux-arm64.tar.gz`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-linux-arm64.tar.gz) | Pi 5 / Jetson Orin Nano | ARM64 counterpart of the Linux x64 package |
-| [`u3v-sdk-2.2.6-macos-arm64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-macos-arm64.zip) | Apple Silicon (M1–M4) | C/C++ SDK + `u3v_viewer.app` |
-| [`u3v-sdk-2.2.6-macos-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6-macos-x64.zip) | Intel Mac | Intel counterpart of the macOS arm64 package |
-| [`u3v-sdk-2.2.6.1-python.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.2.6.1-python.zip) | All platforms | Python 3.8+ package; bundles native libraries for every platform |
+| [`u3v-sdk-2.3.0-windows-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-windows-x64.zip) | Windows 10/11 x64 | C/C++ SDK + Qt6 viewer, fully self-contained |
+| [`u3v-sdk-2.3.0-linux-x64.tar.gz`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-linux-x64.tar.gz) | Ubuntu 22.04+ x64 | C/C++ SDK + viewer (system Qt6 + libusb) |
+| [`u3v-sdk-2.3.0-linux-arm64.tar.gz`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-linux-arm64.tar.gz) | Pi 5 / Jetson Orin Nano | ARM64 counterpart of the Linux x64 package |
+| [`u3v-sdk-2.3.0-macos-arm64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-macos-arm64.zip) | Apple Silicon (M1–M4) | C/C++ SDK + `u3v_viewer.app` |
+| [`u3v-sdk-2.3.0-macos-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-macos-x64.zip) | Intel Mac | Intel counterpart of the macOS arm64 package |
+| [`u3v-sdk-2.3.0-python.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/u3v-sdk-2.3.0-python.zip) | All platforms | Python 3.8+ package; bundles native libraries for every platform |
+| [`U3V-Camera-Framerate-Limit-Test-Tool-2.3.0-win-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/U3V-Camera-Framerate-Limit-Test-Tool-2.3.0-win-x64.zip) | Windows 10/11 x64 | Loss, throughput, and loss-free frame-rate limit validation tool |
+
+### Frame-Rate Limit Test Tool (Windows)
+
+The version-matched **U3V Camera Framerate Limit Test Tool** validates the sustained streaming limit of one or more connected cameras. It reports complete frames, incomplete frames, sequence gaps, loss percentage, frame rate, and throughput, allowing users to identify the highest resolution and frame-rate setting that remains loss-free on their own Windows USB3 host.
+
+The archive contains `loss_bench.exe`, the v2.3.0 camera runtime, and the required USB backend. Its included `README.txt` describes free-run, software-trigger, external-trigger, and multi-camera test modes together with report interpretation and troubleshooting guidance.
 
 ### Supported Platforms
 
@@ -103,7 +110,7 @@ On Windows, the **InnoMaker SDK** uses the **WinUSB** driver, while **eBUS Playe
 
 **Step 2: Install the target driver**
 
-- **Switch to InnoMaker SDK (WinUSB):** Run `tools\zadig-2.9.exe` from the `u3v-sdk-2.2.6-windows-x64` package, select the camera device, choose **WinUSB**, and click **Install Driver**.
+- **Switch to InnoMaker SDK (WinUSB):** Run `tools\zadig-2.9.exe` from the `u3v-sdk-2.3.0-windows-x64` package, select the camera device, choose **WinUSB**, and click **Install Driver**.
 - **Switch to eBUS Player (Pleora USB):** Launch the eBUS SDK installer or eBUS Player — it will automatically install the Pleora USB driver on first run.
 
 > **Tip:** If the camera is not recognized after switching, try unplugging and replugging the USB cable, or restart the computer.
@@ -148,12 +155,13 @@ A pre-configured Raspberry Pi 5 OS image with all software (InnoMaker SDK, eBUS 
 
 | Directory / File | Purpose |
 | :--- | :--- |
-| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/) | InnoMaker U3V SDK v2.2.6 packages (Windows, Linux x64/ARM64, macOS, Python) |
+| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/) | InnoMaker U3V SDK v2.3.0 packages (Windows, Linux x64/ARM64, macOS, Python) |
 | [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/DELIVERY_OVERVIEW.md) | Full SDK documentation: package contents, installation, API reference |
 | [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/RELEASE_NOTES.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/RELEASE_NOTES.md) | SDK changelog and version history |
 | [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/DLL_USAGE.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/DLL_USAGE.md) | C/C++ and Python library integration guide |
 | [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/TRIGGER_USAGE.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/TRIGGER_USAGE.md) | External hardware trigger guide (wiring, Arduino, Pi, Jetson, STM32, PLC) |
 | [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/WHATS_NEW.md`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/WHATS_NEW.md) | Customer-facing summary of improvements across SDK versions |
+| [`InnoMaker_SDK_Support_Win_Linux_Mac_Python/U3V-Camera-Framerate-Limit-Test-Tool-2.3.0-win-x64.zip`](./InnoMaker_SDK_Support_Win_Linux_Mac_Python/U3V-Camera-Framerate-Limit-Test-Tool-2.3.0-win-x64.zip) | Windows x64 utility for measuring frame loss, data throughput, and loss-free frame-rate limits |
 | [`eBusPlayer&Aravis_PI5_Linux/`](./eBusPlayer%26Aravis_PI5_Linux/) | eBUS Player and Aravis packages for Raspberry Pi 5 / Linux |
 | [`eBusPlayer_Win/`](./eBusPlayer_Win/) | Windows eBUS Player download links |
 | [`PreInstalled-IMG-PI5/`](./PreInstalled-IMG-PI5/) | Download link for pre-configured Raspberry Pi 5 OS image |
