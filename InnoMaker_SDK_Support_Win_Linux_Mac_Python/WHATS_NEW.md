@@ -6,6 +6,28 @@ version's full feature list, see `RELEASE_NOTES.md`.
 
 ---
 
+## 2.3.2
+
+- **Accurate color on every color camera.** The viewer's color live preview and
+  white balance now render correct color across the full range of supported
+  color sensors and Bayer layouts.
+- **Expanded Color / ISP controls.** The Color / ISP panel adds a **Bayer
+  Pattern** selector (Auto plus manual RGGB / GRBG / GBRG / BGGR), a **green**
+  white-balance gain alongside red and blue, and **Histogram** levels with a
+  one-shot Auto — in addition to the existing Gamma and Color Matrix.
+- **Steadier, tunable preview.** A selectable preview display rate
+  (**Preview → Display FPS**, default 25 fps) keeps the live view smooth on any
+  host. Capture always runs at the full sensor frame rate.
+
+## 2.3.1
+
+- **GPU-accelerated live preview.** The viewer now renders on the GPU, so color
+  preview is much smoother and stays fluid at full frame rate — including color
+  cameras on Raspberry Pi 5 and other ARM hosts, and without dropped frames.
+- **Color / ISP controls in the viewer.** Color cameras get a Color / ISP panel
+  with White Balance (manual red/blue gain, or one-shot **Auto**), Gamma, and a
+  3×3 Color Matrix. All off by default; mono cameras are unaffected.
+
 ## 2.3.0
 
 - **Query the SDK version at runtime.** `u3v_get_version()` in C and

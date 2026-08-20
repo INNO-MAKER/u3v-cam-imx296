@@ -1,67 +1,52 @@
 # U3V Camera SDK — Release Notes
 
-**Version:** 2.3.0
-**Date:** 2026-08-15
-**Type:** Feature release (ABI-compatible)
+**Version:** 2.3.2
+**Date:** 2026-08-19
+**Type:** Viewer feature release (ABI-compatible, drop-in library)
 
 ---
 
 ## What's New
 
-### Query the SDK version at runtime
+### Accurate color on every color camera
 
-The SDK now reports its own version and vendor through a single call, so your
-application and logs can record exactly which build is in use.
+The viewer's color live preview and white balance now render correct color
+across the full range of supported color sensors and Bayer layouts. Open a
+color camera and the preview shows true color; **Auto** white balance produces
+a correctly balanced image.
 
-```c
-#include <u3v/u3v_sdk.h>
+### Expanded Color / ISP controls
 
-printf("SDK: %s\n", u3v_get_version());
-/* e.g. "innomaker U3V Camera SDK 2.3.0" */
-```
+The color camera's **Color / ISP** panel now offers:
 
-In Python:
+- **Bayer Pattern** — Auto (follows the camera) plus manual RGGB / GRBG / GBRG /
+  BGGR selection.
+- **White Balance** — red, green, and blue gain, or press **Auto** for a
+  one-shot automatic white balance.
+- **Gamma** — adjustable gamma curve.
+- **Color Matrix** — a 3×3 color-correction matrix.
+- **Histogram** — dark / light levels with a one-shot **Auto**.
 
-```python
-import u3v_cam
-print(u3v_cam.sdk_version())   # native library, e.g. "innomaker U3V Camera SDK 2.3.0"
-print(u3v_cam.__version__)     # Python wrapper version
-```
+All controls are off by default and apply only to color cameras; mono cameras
+are unaffected.
 
-On Windows the library also carries its version and vendor in the DLL file
-properties (right-click `u3v_cam.dll` → Properties → Details).
+### Steadier, tunable preview
 
-### White balance from the Python interface
-
-With the color pipeline enabled, you can apply white balance directly from
-Python — a one-shot automatic balance, or fixed per-channel gains:
-
-```python
-cam.pixel_format = u3v_cam.PFNC_BAYERRG8
-cam.enable_color()
-cam.start()
-
-cam.auto_white_balance()               # one-shot gray-world white balance
-# or set fixed gains:  cam.set_white_balance(1.6, 1.0, 1.9)
-
-rgb = cam.read_frame()                 # white-balanced (H, W, 3) RGB
-```
-
-`cam.get_white_balance()` returns the current red/green/blue gains. See the
-Python package README for the full color workflow.
+A selectable preview display rate (**Preview → Display FPS**, default 25 fps)
+keeps the live view smooth on any host. This is a display setting only —
+image capture always runs at the full sensor frame rate.
 
 ## Compatibility
 
-**Drop-in binary replacement — no relink required for existing code.**
+**Drop-in binary replacement — no API or ABI change, no relink required.**
 
-- C/C++: replace `libu3v_cam.so.2.2.x` with `libu3v_cam.so.2.3.0`
-  (SONAME `libu3v_cam.so.2` unchanged). On Windows, replace `u3v_cam.dll`.
-  On macOS, replace `libu3v_cam.dylib`.
-- Python: replace the `u3v-sdk-2.3.0-python.zip` package.
+This release improves the viewer; the library API is identical to 2.3.1.
 
-All existing 2.1.x / 2.2.x application code continues to work unchanged.
-**To use the new `u3v_get_version()` call**, update the SDK headers together
-with the library (C/C++), or use the new Python package.
+- C/C++: replace `u3v_cam.dll` (Windows), `libu3v_cam.so.2.3.x` (Linux), or
+  `libu3v_cam.dylib` (macOS). SONAME `libu3v_cam.so.2` unchanged.
+- Python: replace the `u3v-sdk-2.3.2-python.zip` package.
+
+All existing 2.1.x / 2.2.x / 2.3.x application code continues to work unchanged.
 
 ---
 
@@ -69,12 +54,12 @@ with the library (C/C++), or use the new Python package.
 
 | OS | Architecture | Package |
 |---|---|---|
-| Windows 10 / 11 | x64 | `u3v-sdk-2.3.0-windows-x64.zip` |
-| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.3.0-linux-x64.tar.gz` |
-| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.3.0-linux-arm64.tar.gz` |
-| macOS 11+ | Apple Silicon | `u3v-sdk-2.3.0-macos-arm64.zip` |
-| macOS 11+ | Intel x64 | `u3v-sdk-2.3.0-macos-x64.zip` |
-| Python 3.8+ | Any of the above | `u3v-sdk-2.3.0-python.zip` |
+| Windows 10 / 11 | x64 | `u3v-sdk-2.3.2-windows-x64.zip` |
+| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.3.2-linux-x64.tar.gz` |
+| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.3.2-linux-arm64.tar.gz` |
+| macOS 11+ | Apple Silicon | `u3v-sdk-2.3.2-macos-arm64.zip` |
+| macOS 11+ | Intel x64 | `u3v-sdk-2.3.2-macos-x64.zip` |
+| Python 3.8+ | Any of the above | `u3v-sdk-2.3.2-python.zip` |
 
 For installation and usage instructions, see the package README or contact
 the SDK provider. For a summary of improvements across earlier versions, see
