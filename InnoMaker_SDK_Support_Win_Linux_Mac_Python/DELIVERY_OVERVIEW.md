@@ -6,8 +6,8 @@ GUI viewer, reference examples, and an optional image-signal-processing
 
 - **SDK version:** 2.3.2
 - **Last updated:** 2026-08-19
-- **What's new in 2.2.0:** color-camera support via a pluggable ISP
-  chain (demosaic, white balance, gamma, color correction). See §7.
+- **Color cameras:** supported through a pluggable ISP chain (demosaic,
+  white balance, gamma, color correction). See §7.
 
 ---
 
@@ -30,7 +30,7 @@ API on Windows compiles and runs unchanged on Linux and macOS. Python
 code written against `u3v_cam` runs unchanged on Windows, Linux, and
 macOS.
 
-**File naming convention** (locked from 2.2.0 onward):
+**File naming convention:**
 
 ```
 u3v-sdk-<version>-<os>-<arch>.<ext>
@@ -158,7 +158,7 @@ u3v-sdk-2.3.2-linux-<arch>/
 ├── examples/
 │   └── basic_capture.c           Compilable reference source
 ├── docs/
-│   └── CHANGELOG.md              Release notes
+│   └── RELEASE_NOTES.md          Release notes
 └── run_viewer.sh                 Launch script (sets LD_LIBRARY_PATH)
 ```
 
@@ -233,7 +233,7 @@ u3v-sdk-2.3.2-macos-<arch>/
 │   └── libu3v_cam.2.3.2.dylib    Actual library
 ├── include/u3v/*.h               Public API headers (7 files)
 ├── examples/basic_capture.c      Compilable reference source
-├── docs/CHANGELOG.md              Release notes
+├── docs/RELEASE_NOTES.md         Release notes
 └── run_viewer.sh                 Launch script
 ```
 
@@ -392,7 +392,7 @@ Or use `install_deps.bat` / `install_deps.sh` for an interactive prompt.
 
 ---
 
-## 7. Color Support and the ISP Plugin Chain (New in 2.2.0)
+## 7. Color Support and the ISP Plugin Chain
 
 ### 7.1 What It Is
 
@@ -400,7 +400,7 @@ Color-variant sensors output Bayer-pattern frames that need demosaic
 + optional white balance / gamma / color correction before they look
 right on a display or feed into downstream vision code.
 
-2.2.0 ships three optional ISP plugins that handle this end-to-end:
+The SDK ships three optional ISP plugins that handle this end-to-end:
 
 - **`u3v_isp_color`** — Bayer demosaic + per-channel gain + offset +
   one-click auto white balance + optional histogram stretch
@@ -440,14 +440,14 @@ cam.enable_color()                 # loads the bundled ISP plugins
 rgb = cam.read_frame()             # (H, W, 3) uint8 RGB
 ```
 
-Zero plugins loaded = pass-through; behaviour is byte-for-byte identical
-to 2.1.x.
+Zero plugins loaded = pass-through; frames are delivered byte-for-byte
+as the camera sent them.
 
 ### 7.4 Mono Sensors
 
-Mono cameras (Mono8/10/12/16) pass through the ISP chain untouched —
-each plugin recognises non-Bayer input and forwards frames unchanged.
-Mono workflows written against 2.1.x continue to work unchanged.
+Mono cameras pass through the ISP chain untouched — each plugin
+recognises non-Bayer input and forwards frames unchanged, so a mono
+workflow needs no changes to coexist with the color plugins.
 
 ### 7.5 Recommended Host for Color
 
@@ -515,7 +515,7 @@ u3v_status_t u3v_stream_grab(u3v_stream_t *stream, u3v_buffer_t *buf);
 u3v_status_t u3v_stream_grab_view(u3v_stream_t *stream, u3v_buffer_t *out);
 u3v_status_t u3v_camera_stop(u3v_camera_t *cam);
 
-/* ISP pipeline (optional, 2.2.0+) */
+/* ISP pipeline (optional) */
 u3v_status_t u3v_pipeline_create(u3v_pipeline_t **pipe);
 u3v_status_t u3v_pipeline_load_dir(u3v_pipeline_t *pipe, const char *dir);
 u3v_status_t u3v_stream_set_pipeline(u3v_stream_t *stream, u3v_pipeline_t *pipe);
