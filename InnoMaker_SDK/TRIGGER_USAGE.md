@@ -9,9 +9,8 @@ configuration are identical across sensors. Only the
 **sensor-specific reference values** in §1 change per product; look
 them up in the corresponding camera's User Manual, Chapter 3.
 
-Common trigger sources covered: Arduino, Raspberry Pi, NVIDIA Jetson,
-STM32 / ESP32 / generic microcontroller, TTL function generator, and
-24 V PLC output.
+Common trigger sources covered: Arduino, STM32 / ESP32 / generic
+microcontroller, TTL function generator, and 24 V PLC output.
 
 For the electrical and timing spec of the camera in this package, see
 the **U3V-CAM-IMX296 User Manual, Chapter 3** (Trigger & Strobe Timing)
@@ -67,11 +66,9 @@ logic. Wiring by source type:
 |---|---|---|---|
 | Arduino UNO / Nano / Mega | 5 V | Not required | Direct GPIO drive |
 | TTL function generator | 5 V | Not required | 50 Ω output OK |
-| Raspberry Pi 4 / 5 GPIO | 3.3 V | Not required | Direct GPIO drive |
-| NVIDIA Jetson GPIO | 3.3 V | Not required | Direct GPIO drive |
-| STM32 / ESP32 / generic MCU | 3.3 V | Not required | Any push-pull GPIO |
-| Industrial PLC output | 12 V | ~340 Ω external | See §3.2 |
-| Industrial PLC output | 24 V | ~940 Ω (1 kΩ) external | See §3.2 |
+| STM32 / ESP32 / generic MCU / other 3.3 V GPIO | 3.3 V | Not required | Any push-pull GPIO |
+| Industrial PLC output | 12 V | ~340 Ω external | See §2.2 |
+| Industrial PLC output | 24 V | ~940 Ω (1 kΩ) external | See §2.2 |
 
 **Camera pinout** (Hirose HR10A-7P-6S cable):
 
@@ -154,68 +151,7 @@ void loop() {
 }
 ```
 
-### 3.2 Raspberry Pi 4 / 5 — shell (`gpioset`)
-
-Pi 5 uses `gpiochip0` by default; Pi 4 with Bookworm uses `gpiochip4`.
-Adjust `--chip` accordingly.
-
-```bash
-#!/usr/bin/env bash
-# 1 Hz trigger from GPIO23, ~2 ms pulse width (>= 1 ms recommended).
-CHIP=gpiochip0
-LINE=23
-while true; do
-    gpioset $CHIP $LINE=1
-    sleep 0.002
-    gpioset $CHIP $LINE=0
-    sleep 1.0
-done
-```
-
-### 3.3 Raspberry Pi — Python (`lgpio`)
-
-```python
-import lgpio, time
-
-CHIP  = 0            # /dev/gpiochip0
-LINE  = 23
-h = lgpio.gpiochip_open(CHIP)
-lgpio.gpio_claim_output(h, LINE, 0)
-
-try:
-    while True:
-        lgpio.gpio_write(h, LINE, 1)
-        time.sleep(0.001)     # 1 ms pulse (recommended: >= 1 ms)
-        lgpio.gpio_write(h, LINE, 0)
-        time.sleep(0.02)      # 50 Hz
-finally:
-    lgpio.gpiochip_close(h)
-```
-
-### 3.4 NVIDIA Jetson (Orin Nano / Nano)
-
-Same 3.3 V GPIO model as the Pi, driven via `libgpiod` / `lgpio`.
-
-```python
-import gpiod, time
-
-with gpiod.request_lines(
-    "/dev/gpiochip0",
-    consumer="u3v-trigger",
-    config={ 17: gpiod.LineSettings(direction=gpiod.line.Direction.OUTPUT) }
-) as request:
-    while True:
-        request.set_value(17, gpiod.line.Value.ACTIVE)
-        time.sleep(0.001)     # 1 ms pulse (recommended: >= 1 ms)
-        request.set_value(17, gpiod.line.Value.INACTIVE)
-        time.sleep(0.02)
-```
-
-Map the GPIO number to your carrier board's pinout (Jetson Orin Nano
-40-pin header: e.g. pin 12 = GPIO 194 for the recommended trigger line;
-consult your carrier's pinout table).
-
-### 3.5 STM32 (HAL, generic)
+### 3.2 STM32 (HAL, generic)
 
 ```c
 #define TRIG_PORT  GPIOA
@@ -231,7 +167,7 @@ void trigger_once(void) {
 For hard-real-time trigger streams, drive the pin from a TIM channel
 in PWM one-pulse mode.
 
-### 3.6 TTL function generator
+### 3.3 TTL function generator
 
 Configure the generator for a **pulse** waveform (not sine):
 - Amplitude: 3.3 V or 5 V (both work)
@@ -239,7 +175,7 @@ Configure the generator for a **pulse** waveform (not sine):
 - Frequency: within the sensor's max frame rate for the current ROI
 - Output impedance: 50 Ω (typical); no external termination needed
 
-### 3.7 PLC / 24 V industrial output
+### 3.4 PLC / 24 V industrial output
 
 Wire the PLC output (`+24 V` HIGH) to `Trig+` through a **1 kΩ series
 resistor** (see §2.2). Common the PLC 0 V to `Trig-`. Typical PLC scan
@@ -252,6 +188,12 @@ cycles produce 1–10 ms pulses, which meets the >= 1 ms recommendation.
 All TriggerXxx settings must be applied **before** `u3v_camera_start()`
 / `cam.start()`. This is host-agnostic — identical for every trigger
 source above.
+
+Start the trigger pulses only after `u3v_camera_start()` / `cam.start()` has
+returned. In trigger mode the call takes about 0.15 s and returns once the
+camera is ready to act on triggers. Cameras on earlier firmware need an
+additional readiness step: enable it with `u3v_camera_set_armed_start(cam, 1)`
+/ `cam.armed_start = True` (the call then takes about 0.4 s).
 
 ### 4.1 C
 ```c
@@ -326,7 +268,7 @@ for _ in range(10):
     frame = cam.read_frame()
 ```
 
-Full example: `python/examples/trigger_mode.py`.
+Full example: `examples/trigger_mode.py` in the Python package.
 
 ---
 
@@ -335,7 +277,6 @@ Full example: `python/examples/trigger_mode.py`.
 | Symptom | Check |
 |---|---|
 | No frame on any trigger | `TriggerMode` was set to On **before** `start()`; `TriggerActivation` matches signal edge; `Trig-` shares ground with source |
-| Pi / Jetson: no frame despite valid signal on scope | Confirm chip / line numbers (`gpiochip0` vs `gpiochip4`); some carriers use non-default chips |
 | Occasional missed frames | Ensure pulse width >= 1 ms; slow the trigger rate so T >= Exposure + Readout |
 | `read_frame()` timeout | Trigger period too short, exposure too long, or wiring disconnected |
 | Continuous mode broken after trigger session | Call `configure_trigger(on=False)`, then `stop()` + `start()` again |
@@ -349,8 +290,8 @@ Full example: `python/examples/trigger_mode.py`.
 - Camera User Manual, Chapter 3 — Trigger & Strobe timing (source of
   truth for the sensor-specific values in §1)
 - Camera User Manual, Chapter 4.4 — Trigger IN circuit diagrams
-- SDK `python/examples/trigger_mode.py` — software trigger example
-- SDK `examples/multi_frame_capture.c` — MultiFrame acquisition example
-- `RELEASE_NOTES.md` — supported features per platform
+- Python package `examples/trigger_mode.py` — software trigger example
+- C/C++ package `examples/multi_frame_capture.c` — MultiFrame acquisition example
+- `RELEASE_NOTES.md` — current version and supported platforms
 - `DLL_USAGE.md` — library integration and deployment
 - `DELIVERY_OVERVIEW.md` — full package inventory and install steps
