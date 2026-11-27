@@ -22,8 +22,8 @@ version's full feature list, see `RELEASE_NOTES.md`.
 ## 2.3.1
 
 - **GPU-accelerated live preview.** The viewer now renders on the GPU, so color
-  preview is much smoother and stays fluid at full frame rate — including color
-  cameras on Raspberry Pi 5 and other ARM hosts, and without dropped frames.
+  preview is much smoother and stays fluid at full frame rate, without dropped
+  frames.
 - **Color / ISP controls in the viewer.** Color cameras get a Color / ISP panel
   with White Balance (manual red/blue gain, or one-shot **Auto**), Gamma, and a
   3×3 Color Matrix. All off by default; mono cameras are unaffected.
@@ -37,7 +37,7 @@ version's full feature list, see `RELEASE_NOTES.md`.
   call `cam.auto_white_balance()` for a one-shot automatic white balance, or
   `cam.set_white_balance(red, green, blue)` for fixed per-channel gains.
 - **The library reports its version and vendor in its file properties**
-  (visible, for example, in the Windows DLL "Details" tab).
+  (visible in the DLL's Properties → "Details" tab).
 
 ## 2.2.6
 
@@ -60,24 +60,20 @@ version's full feature list, see `RELEASE_NOTES.md`.
   instead of numeric values, making trigger setup code clearer and less
   error-prone.
 - **Faster, more stable color processing.** The color ISP RGB filter uses
-  much less CPU, improving color live-view stability on ARM hosts. For
-  smooth full-resolution color ISP, a Jetson Orin Nano or x86_64 host is
-  recommended (see the delivery guide for host recommendations).
+  much less CPU, improving color live-view stability.
 
 ## 2.2.3
 
-- **Lower CPU usage in live view on Linux.** Real-time preview in the
-  viewer is significantly lighter on CPU, especially on Raspberry Pi 5
-  and other ARM64 hosts. Long-running single-camera preview stays
+- **Lower CPU usage in live view.** Real-time preview in the viewer is
+  significantly lighter on CPU. Long-running single-camera preview stays
   smooth and responsive.
-- **Out-of-the-box driver setup on Windows.** The Windows package now
-  includes the USB driver installer and a step-by-step installation
-  guide, so a new machine can be brought online without any separate
-  download.
+- **Out-of-the-box driver setup.** The package now includes the USB
+  driver installer and a step-by-step installation guide, so a new
+  machine can be brought online without any separate download.
 - **External trigger usage guide.** A new guide covers wiring and
-  host-side code for hardware triggering — Arduino, Raspberry Pi,
-  NVIDIA Jetson, STM32, TTL function generators, and 24 V PLC outputs —
-  plus SDK-side trigger configuration in C and Python.
+  host-side code for hardware triggering — Arduino, STM32, TTL function
+  generators, 24 V PLC outputs, and other GPIO sources — plus SDK-side
+  trigger configuration in C and Python.
 
 ## 2.2.1 – 2.2.2
 
@@ -94,10 +90,9 @@ version's full feature list, see `RELEASE_NOTES.md`.
 
 ## 2.1.1
 
-- **More stable multi-camera streaming on Linux.** Running two cameras
-  at once is now stable across long sessions — a higher-rate camera no
-  longer stutters when a slower camera streams alongside it. Most
-  noticeable on ARM64 hosts (Jetson Orin Nano, Raspberry Pi 5).
+- **More stable multi-camera streaming.** Running two cameras at once is
+  stable across long sessions — a higher-rate camera does not stutter
+  when a slower camera streams alongside it.
 
 ## 2.1.0
 
@@ -106,4 +101,3 @@ version's full feature list, see `RELEASE_NOTES.md`.
   in the viewer.
 - **More sensors supported out of the box** — Sony IMX296, OmniVision
   OV9281, and Basler-pattern cameras.
-- **Native Raspberry Pi 5 and Jetson Orin Nano builds.**

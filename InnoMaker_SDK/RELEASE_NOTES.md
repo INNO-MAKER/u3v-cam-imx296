@@ -2,6 +2,7 @@
 
 **Version:** 2.3.2
 **Date:** 2026-08-19
+**Platform:** Windows 10 / 11 x64
 **Type:** Viewer feature release (ABI-compatible, drop-in library)
 
 ---
@@ -42,9 +43,8 @@ image capture always runs at the full sensor frame rate.
 
 This release improves the viewer; the library API is identical to 2.3.1.
 
-- C/C++: replace `u3v_cam.dll` (Windows), `libu3v_cam.so.2.3.x` (Linux), or
-  `libu3v_cam.dylib` (macOS). SONAME `libu3v_cam.so.2` unchanged.
-- Python: replace the `u3v-sdk-2.3.2-python.zip` package.
+- C/C++: replace `u3v_cam.dll`.
+- Python: replace the `u3v-sdk-2.3.2-python-windows-x64.zip` package.
 
 All existing 2.1.x / 2.2.x / 2.3.x application code continues to work unchanged.
 
@@ -55,11 +55,7 @@ All existing 2.1.x / 2.2.x / 2.3.x application code continues to work unchanged.
 | OS | Architecture | Package |
 |---|---|---|
 | Windows 10 / 11 | x64 | `u3v-sdk-2.3.2-windows-x64.zip` |
-| Ubuntu 22.04+ / Debian 12+ | x64 | `u3v-sdk-2.3.2-linux-x64.tar.gz` |
-| Raspberry Pi OS / Ubuntu | ARM64 | `u3v-sdk-2.3.2-linux-arm64.tar.gz` |
-| macOS 11+ | Apple Silicon | `u3v-sdk-2.3.2-macos-arm64.zip` |
-| macOS 11+ | Intel x64 | `u3v-sdk-2.3.2-macos-x64.zip` |
-| Python 3.8+ | Any of the above | `u3v-sdk-2.3.2-python.zip` |
+| Python 3.8+ on Windows 10 / 11 | x64 | `u3v-sdk-2.3.2-python-windows-x64.zip` |
 
 For installation and usage instructions, see the package README or contact
 the SDK provider. For a summary of improvements across earlier versions, see
